@@ -1,0 +1,128 @@
+# Event Scheduling & Calendar Management App – Requirements
+
+## Overview
+A full-stack web app to allow users to schedule, view, and manage events via an interactive calendar interface.
+
+## Tech Stack
+- Frontend: Vue 3 + Tailwind CSS + FullCalendar
+- Backend: Express.js
+- Database: MySQL
+- Auth: JWT + bcrypt
+- Optional: node-cron (reminders), Nodemailer (email)
+
+---
+
+## 1. Core Features
+- User authentication (JWT-based)
+- Create, update, and delete events
+- View events in calendar (month/week/day view)
+- Optional: Recurring events, time zone support, reminders
+
+---
+
+## 2. Feature Modules
+
+### A. Authentication & User Management
+**Frontend**
+- Login/Register
+- Optional: Forgot password
+
+**Backend**
+- POST /auth/register
+- POST /auth/login
+- GET /auth/me
+- Middleware for JWT
+
+**Database: `users`**
+- id, email, name, password, role, created_at
+
+---
+
+### B. Calendar View
+**Frontend**
+- FullCalendar integration
+- Monthly/weekly/daily views
+- Click to create/edit/delete events
+
+**Backend**
+- GET /events (filter by user and date range)
+
+---
+
+### C. Event Management
+**Frontend**
+- Modal/Form for adding/editing events
+- Fields: title, description, start_time, end_time, location
+- Validation: start < end
+
+**Backend**
+- POST /events
+- PUT /events/:id
+- DELETE /events/:id
+
+**Database: `events`**
+- id, user_id, title, description, start_time, end_time, location, timezone, created_at, updated_at
+
+---
+
+### D. Recurring Events (Optional)
+**Frontend**
+- Options: daily, weekly, monthly
+- Show repeat rules visually
+
+**Backend**
+- Store pattern or pre-generate events
+
+**Database fields**
+- is_recurring, recurrence_type, recurrence_until
+
+---
+
+### E. Time Zone Handling
+**Frontend**
+- Detect user's time zone
+- Display and convert times appropriately
+
+**Backend**
+- Store in UTC + user timezone
+
+---
+
+### F. Notifications/Reminders (Optional)
+**Frontend**
+- Reminder field in form
+
+**Backend**
+- Background jobs using node-cron
+- Email support via Nodemailer
+
+---
+
+## 3. Suggested Folder Structure
+
+### Frontend (Vue)
+src/
+  components/
+  views/
+  store/
+  services/
+  router/
+  App.vue
+
+### Backend (Express)
+src/
+  controllers/
+  routes/
+  middleware/
+  models/
+  utils/
+  index.js
+
+---
+
+## 4. Development Plan (MVP First)
+1. Setup auth system (register/login)
+2. Build event CRUD APIs
+3. Create calendar view with event display
+4. Add modals for create/edit
+5. Optional: Recurrence, time zones, reminders
