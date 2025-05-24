@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import authRoutes from "./src/routes/authRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,6 +26,9 @@ app.use(morgan("dev"));
 app.get("/", (req, res) => {
   res.send("API is running");
 });
+
+// Mount auth routes
+app.use("/api/auth", authRoutes);
 
 // Start the server
 app.listen(PORT, () => {
