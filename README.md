@@ -1,91 +1,87 @@
 # Event Calendar App
 
-A full-stack web app to allow users to schedule, view, and manage events via an interactive calendar interface.
+A full-stack web app to schedule, view, and manage events via an interactive calendar interface.
 
 ## Tech Stack
 
-- **Frontend:** Vue 3, Tailwind CSS, FullCalendar
-- **Backend:** Express.js
-- **Database:** MySQL
-- **Authentication:** JWT, bcrypt
-- **Optional:** node-cron (reminders), Nodemailer (email)
+- **Frontend:** Vue 3, Vite, Tailwind CSS, FullCalendar (planned)
+- **Backend:** Express.js (ES modules), Sequelize ORM, MySQL
+- **Authentication:** JWT, bcrypt, cookies
+- **Utilities:** dotenv, morgan, cookie-parser
 
-## Features
-
-- User authentication (JWT-based)
-- Create, update, and delete events
-- View events in calendar (month/week/day view)
-- Optional: Recurring events, time zone support, reminders
-
-## Modules
-
-### Authentication & User Management
-
-- Register and login (JWT)
-- Optional: Forgot password
-
-### Calendar View
-
-- FullCalendar integration
-- Monthly/weekly/daily views
-- Click to create/edit/delete events
-
-### Event Management
-
-- Modal/Form for adding/editing events
-- Fields: title, description, start_time, end_time, location
-- Validation: start < end
-
-### Recurring Events (Optional)
-
-- Daily, weekly, monthly options
-- Show repeat rules visually
-
-### Time Zone Handling
-
-- Detect and display user’s time zone
-- Store times in UTC + user timezone
-
-### Notifications/Reminders (Optional)
-
-- Reminders via background jobs (node-cron)
-- Email notifications (Nodemailer)
+---
 
 ## Folder Structure
 
-### Frontend (Vue)
-
 ```
-client/
+client/           # Vue 3 frontend (Vite)
   src/
     components/
-    views/
-    store/
-    services/
-    router/
+    assets/
     App.vue
-```
+    main.js
+    style.css
+  public/
+  package.json
 
-### Backend (Express)
-
-```
-server/
+server/           # Express backend (ESM)
   src/
-    controllers/
-    routes/
-    middleware/
-    models/
-    utils/
-    index.js
+    _db/
+      db_schema.sql        # MySQL schema
+      db_sample_data.sql   # Sample data
+  index.js
+  package.json
 ```
 
-## Development Plan (MVP First)
+---
 
-1. Setup auth system (register/login)
-2. Build event CRUD APIs
-3. Create calendar view with event display
-4. Add modals for create/edit
-5. Optional: Recurrence, time zones, reminders
+## Setup Instructions
+
+### 1. Database (MySQL)
+
+- Create the database and tables:
+  1. Open a MySQL client (e.g., MySQL Workbench, CLI)
+  2. Run the schema script:
+     ```sql
+     SOURCE server/src/_db/db_schema.sql;
+     ```
+  3. (Optional) Add sample data:
+     ```sql
+     SOURCE server/src/_db/db_sample_data.sql;
+     ```
+
+### 2. Backend (Express API)
+
+```powershell
+cd server
+npm install
+npm run dev   # For development (nodemon)
+# or
+npm start     # For production
+```
+
+- The server runs by default on http://localhost:3001
+- Edit `.env` for DB credentials if needed (add this file manually)
+
+### 3. Frontend (Vue)
+
+```powershell
+cd client
+npm install
+npm run dev
+```
+
+- The frontend runs by default on http://localhost:5173
+
+---
+
+## Development Plan (MVP)
+
+1. User authentication (register/login)
+2. Event CRUD APIs
+3. Calendar view with event display
+4. Modals for create/edit
+5. (Optional) Recurrence, time zones, reminders
 
 ---
 
