@@ -36,3 +36,4 @@ server/.env
 # Misc
 client/.cache/
 server/.cache/
+start_server.sh
