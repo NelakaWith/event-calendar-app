@@ -23,11 +23,6 @@ export const createEvent = async (req, res) => {
         .status(400)
         .json({ message: "Title, start_time, and end_time are required." });
     }
-    // Get user_id from auth middleware or request body
-    const user_id = req.user?.id || req.body.user_id;
-    if (!user_id) {
-      return res.status(401).json({ message: "User not authenticated." });
-    }
     // Create event in database
     const event = await Event.create({
       user_id,
