@@ -1,8 +1,11 @@
 // server/src/controllers/eventController.js
+// Event controller: handles CRUD operations for events
 import { Event } from "../models/event.js";
 
+// Create a new event
 export const createEvent = async (req, res) => {
   try {
+    // Destructure event fields from request body
     const {
       title,
       description,
@@ -14,16 +17,18 @@ export const createEvent = async (req, res) => {
       recurrence_type,
       recurrence_until,
     } = req.body;
+    // Validate required fields
     if (!title || !start_time || !end_time) {
       return res
         .status(400)
         .json({ message: "Title, start_time, and end_time are required." });
     }
-    // Optionally, get userId from req.user if using auth middleware
+    // Get user_id from auth middleware or request body
     const user_id = req.user?.id || req.body.user_id;
     if (!user_id) {
       return res.status(401).json({ message: "User not authenticated." });
     }
+    // Create event in database
     const event = await Event.create({
       user_id,
       title,
@@ -44,6 +49,7 @@ export const createEvent = async (req, res) => {
   }
 };
 
+// Get all events for a user (or all events if no user_id specified)
 export const getEvents = async (req, res) => {
   try {
     const user_id = req.user?.id || req.query.user_id;
@@ -57,6 +63,7 @@ export const getEvents = async (req, res) => {
   }
 };
 
+// Get a single event by its ID
 export const getEventById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -70,6 +77,7 @@ export const getEventById = async (req, res) => {
   }
 };
 
+// Update an event by its ID
 export const updateEvent = async (req, res) => {
   try {
     const { id } = req.params;
@@ -85,6 +93,7 @@ export const updateEvent = async (req, res) => {
   }
 };
 
+// Delete an event by its ID
 export const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;
