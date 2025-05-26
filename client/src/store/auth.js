@@ -29,7 +29,7 @@ export const useAuthStore = defineStore("auth", {
         this.loading = false;
       }
     },
-    async fetchProfile() {
+    async checkAuth() {
       this.loading = true;
       try {
         const res = await axios.get("/api/auth/me", { withCredentials: true });
