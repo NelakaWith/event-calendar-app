@@ -1,9 +1,9 @@
 // client/src/router/index.js
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../components/Home.vue";
-import Login from "../components/Login.vue";
-import Register from "../components/Register.vue";
-import Calendar from "../components/Calendar.vue";
+import Home from "../components/AppHome.vue";
+import Login from "../components/AppLogin.vue";
+import Register from "../components/AppRegister.vue";
+import Calendar from "../components/AppCalendar.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
