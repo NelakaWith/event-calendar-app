@@ -1,10 +1,10 @@
-# Event Calendar App
+# Event Calendar App – Monorepo
 
 A full-stack web app to schedule, view, and manage events via an interactive calendar interface.
 
 ## Tech Stack
 
-- **Frontend:** Vue 3, Vite, Tailwind CSS, FullCalendar (planned)
+- **Frontend:** Vue 3, Vite, Tailwind CSS, Vue Router, Sass/SCSS
 - **Backend:** Express.js (ES modules), Sequelize ORM, MySQL
 - **Authentication:** JWT, bcrypt, cookies
 - **Utilities:** dotenv, morgan, cookie-parser
@@ -17,20 +17,44 @@ A full-stack web app to schedule, view, and manage events via an interactive cal
 client/           # Vue 3 frontend (Vite)
   src/
     components/
-    assets/
+      Home.vue
+      Login.vue
+      Register.vue
+      Calendar.vue
+    router/
+      index.js
+    scss/
+      main.scss
     App.vue
     main.js
-    style.css
   public/
   package.json
+  README.md
 
 server/           # Express backend (ESM)
   src/
+    controllers/
+      authController.js
+      eventController.js
+    middleware/
+      jwt.middleware.js
+    models/
+      user.js
+      event.js
+    routes/
+      authRoutes.js
+      eventRoutes.js
     _db/
-      db_schema.sql        # MySQL schema
-      db_sample_data.sql   # Sample data
+      db_schema.sql
+      db_sample_data.sql
+      sequelize.js
   index.js
   package.json
+  README.md
+
+start_servers.cmd # Script to start both servers in separate CMD windows
+README.md         # Monorepo/project overview
+requirements.txt  # Project requirements
 ```
 
 ---
@@ -61,7 +85,7 @@ npm start     # For production
 ```
 
 - The server runs by default on http://localhost:3001
-- Edit `.env` for DB credentials if needed (add this file manually)
+- Edit `.env` for DB credentials, JWT secret, and CORS_ORIGIN if needed
 
 ### 3. Frontend (Vue)
 
@@ -73,15 +97,25 @@ npm run dev
 
 - The frontend runs by default on http://localhost:5173
 
+### 4. Start Both Servers (Windows Only)
+
+Double-click or run in PowerShell:
+
+```powershell
+start_servers.cmd
+```
+
+This will open two CMD windows: one for the backend and one for the frontend.
+
 ---
 
-## Development Plan (MVP)
+## Features
 
-1. User authentication (register/login)
-2. Event CRUD APIs
-3. Calendar view with event display
-4. Modals for create/edit
-5. (Optional) Recurrence, time zones, reminders
+- User authentication (register/login/logout)
+- Event CRUD APIs (create, read, update, delete)
+- Calendar view (planned)
+- Modular code structure for easy extension
+- Environment-based configuration
 
 ---
 
