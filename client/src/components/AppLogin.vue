@@ -45,10 +45,11 @@
 <script setup>
 import { ref } from "vue";
 import * as yup from "yup";
-import axios from "axios";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "../store/auth";
 
 const router = useRouter();
+const auth = useAuthStore();
 
 const email = ref("");
 const password = ref("");
@@ -78,12 +79,12 @@ const onSubmit = async () => {
       { email: email.value, password: password.value },
       { abortEarly: false }
     );
-    await axios.post(
-      "http://localhost:3001/api/auth/login",
-      { email: email.value, password: password.value },
-      { withCredentials: true }
-    );
-    router.push("/my-profile");
+    await auth.login(email.value, password.value);
+    if (auth.isAuthenticated) {
+      router.push("/my-profile");
+    } else if (auth.error) {
+      errors.value.form = auth.error;
+    }
   } catch (err) {
     errors.value.form = "Invalid email or password.";
   }
