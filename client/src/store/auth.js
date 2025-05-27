@@ -22,7 +22,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = res.data.user;
         this.isAuthenticated = true;
       } catch (err) {
-        this.error = "Invalid email or password.";
+        this.error = "Invalid email or password! Please try again";
         this.user = null;
         this.isAuthenticated = false;
       } finally {

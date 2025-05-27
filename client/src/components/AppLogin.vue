@@ -3,38 +3,36 @@
     <div class="login__container">
       <h2>Welcome Back</h2>
       <h3>Please enter your credentials to continue</h3>
-      <form @submit.prevent="onSubmit">
-        <div>
+      <form @submit.prevent="onSubmit" novalidate>
+        <div class="app-input-group">
           <label for="email">Email</label>
           <input
             v-model="email"
             id="email"
             name="email"
             type="email"
-            required
             autocomplete="username"
             @input="validateField('email')"
           />
-          <div v-if="errors.email" class="login__container__error">
+          <div v-if="errors.email" class="app-form-error">
             {{ errors.email }}
           </div>
         </div>
-        <div>
+        <div class="app-input-group">
           <label for="password">Password</label>
           <input
             v-model="password"
             id="password"
             name="password"
             type="password"
-            required
             autocomplete="current-password"
             @input="validateField('password')"
           />
-          <div v-if="errors.password" class="login__container__error">
+          <div v-if="errors.password" class="app-form-error">
             {{ errors.password }}
           </div>
         </div>
-        <div v-if="errors.form" class="login__container__error">
+        <div v-if="errors.form" class="app-form-error">
           {{ errors.form }}
         </div>
         <div class="login__container__keep-logged-in">
@@ -69,7 +67,10 @@ const password = ref("");
 const errors = ref({});
 
 const schema = yup.object({
-  email: yup.string().email().required("Email is required and must be valid."),
+  email: yup
+    .string()
+    .email("Email is required and must be valid.")
+    .required("Email is required and must be valid."),
   password: yup.string().required("Password is required."),
 });
 
@@ -99,7 +100,7 @@ const onSubmit = async () => {
       errors.value.form = auth.error;
     }
   } catch (err) {
-    errors.value.form = "Invalid email or password.";
+    errors.value.form = "Something went wrong! Please try again.";
   }
 };
 </script>
@@ -111,10 +112,6 @@ const onSubmit = async () => {
   &__container {
     @apply p-8 md:rounded-lg md:shadow-lg w-full md:max-w-lg;
     @apply bg-white;
-    &__error {
-      @apply text-sm mb-2;
-      @apply text-red-600;
-    }
     &__keep-logged-in {
       @apply flex items-center justify-between;
       label {
@@ -131,15 +128,6 @@ const onSubmit = async () => {
   }
   form {
     @apply space-y-4 mb-6;
-  }
-  label {
-    @apply block;
-    @apply text-gray-700 mb-1;
-  }
-  input[type="email"],
-  input[type="password"] {
-    @apply w-full px-3 py-2 border rounded-md focus:outline-none ring-1;
-    @apply focus:ring-green-600 ring-green-400;
   }
   button {
     @apply w-full py-2 transition rounded;
