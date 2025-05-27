@@ -1,5 +1,4 @@
 // server/src/controllers/eventController.js
-// Event controller: handles CRUD operations for events
 import { Event } from "../models/event.js";
 
 // Create a new event
@@ -78,7 +77,6 @@ export const updateEvent = async (req, res) => {
     const { id } = req.params;
     const event = await Event.findByPk(id);
     if (!event) return res.status(404).json({ message: "Event not found." });
-    // Optionally, check ownership: if (event.user_id !== req.user.id) return res.status(403).json({ message: "Forbidden" });
     await event.update(req.body);
     res.json({ message: "Event updated successfully", event });
   } catch (err) {
@@ -94,7 +92,6 @@ export const deleteEvent = async (req, res) => {
     const { id } = req.params;
     const event = await Event.findByPk(id);
     if (!event) return res.status(404).json({ message: "Event not found." });
-    // Optionally, check ownership: if (event.user_id !== req.user.id) return res.status(403).json({ message: "Forbidden" });
     await event.destroy();
     res.json({ message: "Event deleted successfully" });
   } catch (err) {

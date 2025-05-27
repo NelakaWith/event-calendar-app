@@ -1,5 +1,46 @@
-# Vue 3 + Vite
+# Event Calendar App – Client
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This is the frontend for the Event Calendar App, built with Vue 3, Vite, and Tailwind CSS.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## Features
+
+- Vue Router for navigation (Home, Login, Register, Calendar)
+- SCSS/Sass support
+- API integration with Express backend
+
+## Project Structure
+
+```
+client/
+  src/
+    components/
+      Home.vue
+      Login.vue
+      Register.vue
+      Calendar.vue
+    router/
+      index.js
+    scss/
+      main.scss
+    App.vue
+    main.js
+  public/
+  package.json
+```
+
+## Setup
+
+```powershell
+cd client
+npm install
+npm run dev
+```
+
+The app will run at http://localhost:5173 by default.
+
+---
+
+## Notes
+
+- Update API endpoints in your code to match your backend server if needed.
+- You can add more routes and components as your app grows.
