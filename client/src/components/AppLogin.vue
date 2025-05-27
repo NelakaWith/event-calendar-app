@@ -1,11 +1,9 @@
 <template>
   <div class="login">
     <div class="login__container">
-      <h2>Login</h2>
+      <h2>Welcome Back</h2>
+      <h3>Please enter your credentials to continue</h3>
       <form @submit.prevent="onSubmit">
-        <div v-if="errors.form" class="login__container__error">
-          {{ errors.form }}
-        </div>
         <div>
           <label for="email">Email</label>
           <input
@@ -36,8 +34,23 @@
             {{ errors.password }}
           </div>
         </div>
+        <div v-if="errors.form" class="login__container__error">
+          {{ errors.form }}
+        </div>
+        <div class="login__container__keep-logged-in">
+          <label>
+            <input type="checkbox" v-model="auth.keepLoggedIn" />
+            Keep me logged in
+          </label>
+          <label>Forgot your password?</label>
+        </div>
         <button type="submit" :disabled="!email || !password">Login</button>
       </form>
+      <hr />
+      <small>
+        Don't have an account?
+        <u><router-link to="/register">Sign up</router-link> </u>
+      </small>
     </div>
   </div>
 </template>
@@ -93,35 +106,56 @@ const onSubmit = async () => {
 
 <style lang="scss" scoped>
 .login {
-  @apply flex items-center justify-center h-screen;
-  @apply bg-gray-100;
+  @apply flex items-start md:items-center justify-center h-screen;
+  @apply md:bg-gray-100;
   &__container {
-    @apply p-8 rounded-md shadow-md w-full max-w-sm;
+    @apply p-8 md:rounded-lg md:shadow-lg w-full md:max-w-lg;
     @apply bg-white;
     &__error {
-      @apply text-red-600;
       @apply text-sm mb-2;
+      @apply text-red-600;
+    }
+    &__keep-logged-in {
+      @apply flex items-center justify-between;
+      label {
+        @apply text-sm cursor-pointer;
+      }
     }
   }
   h2 {
-    @apply text-2xl font-bold mb-6 text-center;
+    @apply text-3xl font-bold mb-2 text-center;
+  }
+  h3 {
+    @apply mb-6 text-center text-sm;
+    @apply text-gray-600;
   }
   form {
-    @apply space-y-4;
+    @apply space-y-4 mb-6;
   }
   label {
     @apply block;
     @apply text-gray-700 mb-1;
   }
-  input {
-    @apply w-full px-3 py-2 border rounded focus:outline-none focus:ring-2;
-    @apply focus:ring-green-500;
+  input[type="email"],
+  input[type="password"] {
+    @apply w-full px-3 py-2 border rounded-md focus:outline-none ring-1;
+    @apply focus:ring-green-600 ring-green-400;
   }
   button {
-    @apply w-full transition rounded;
-    @apply bg-green-500 text-white py-2  hover:bg-green-600;
+    @apply w-full py-2 transition rounded;
+    @apply bg-green-500 text-white hover:bg-green-600;
     &:disabled {
       @apply bg-gray-400 cursor-not-allowed;
+    }
+  }
+  hr {
+    @apply my-6 border-gray-300;
+  }
+  small {
+    @apply block w-full text-sm text-center;
+    @apply text-gray-600;
+    u {
+      @apply text-blue-500 hover:text-blue-700;
     }
   }
 }
