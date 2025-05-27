@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login__container">
       <h2>Welcome Back</h2>
-      <h3>Please enter your credentials to continue</h3>
+      <h3>Please login to continue.</h3>
       <form @submit.prevent="onSubmit" novalidate>
         <div class="app-input-group">
           <label for="email">Email</label>
@@ -36,7 +36,7 @@
           {{ errors.form }}
         </div>
         <div class="login__container__keep-logged-in">
-          <label>
+          <label class="app-input-group">
             <input type="checkbox" v-model="auth.keepLoggedIn" />
             Keep me logged in
           </label>
@@ -116,6 +116,10 @@ const onSubmit = async () => {
       @apply flex items-center justify-between;
       label {
         @apply text-sm cursor-pointer;
+        &:last-child {
+          @apply cursor-not-allowed;
+          @apply text-gray-400;
+        }
       }
     }
   }
