@@ -20,6 +20,7 @@ client/dist-ssr/
 
 # Editor directories and files
 .vscode/*
+.vite/*
 !.vscode/extensions.json
 .idea
 .DS_Store
