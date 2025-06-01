@@ -15,6 +15,7 @@ const validateToken = (req, res, next) => {
     const validToken = jwt.verify(accessToken, JWT_SECRET);
     if (validToken) {
       req.authenticated = true;
+      req.user = validToken;
       return next();
     }
   } catch (err) {
