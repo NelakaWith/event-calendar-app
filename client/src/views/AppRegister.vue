@@ -168,7 +168,7 @@ const onSubmit = async () => {
     );
     await auth.register(email.value, password.value, name.value);
     if (auth.isAuthenticated) {
-      router.push("/my-profile");
+      router.push("/login");
     } else if (auth.error) {
       errors.value.form = auth.error;
     }
