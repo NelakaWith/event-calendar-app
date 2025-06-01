@@ -122,32 +122,32 @@ const onSubmit = async () => {
         }
       }
     }
-  }
-  h2 {
-    @apply text-3xl font-bold mb-2 text-center;
-  }
-  h3 {
-    @apply mb-6 text-center text-sm;
-    @apply text-gray-600;
-  }
-  form {
-    @apply space-y-4 mb-6;
-  }
-  button {
-    @apply w-full py-2 transition rounded;
-    @apply bg-green-500 text-white hover:bg-green-600;
-    &:disabled {
-      @apply bg-gray-400 cursor-not-allowed;
+    h2 {
+      @apply text-3xl font-bold mb-2 text-center;
     }
-  }
-  hr {
-    @apply my-6 border-gray-300;
-  }
-  small {
-    @apply block w-full text-sm text-center;
-    @apply text-gray-600;
-    u {
-      @apply text-blue-500 hover:text-blue-700;
+    h3 {
+      @apply mb-6 text-center text-sm;
+      @apply text-gray-600;
+    }
+    form {
+      @apply space-y-4 mb-6;
+    }
+    button {
+      @apply w-full py-2 transition rounded;
+      @apply bg-green-500 text-white hover:bg-green-600;
+      &:disabled {
+        @apply bg-gray-400 cursor-not-allowed;
+      }
+    }
+    hr {
+      @apply my-6 border-gray-300;
+    }
+    small {
+      @apply block w-full text-sm text-center;
+      @apply text-gray-600;
+      u {
+        @apply text-blue-500 hover:text-blue-700;
+      }
     }
   }
 }
