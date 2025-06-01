@@ -19,6 +19,20 @@
           </div>
         </div>
         <div class="app-input-group">
+          <label for="name">Name</label>
+          <input
+            v-model="name"
+            id="name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            @input="validateField('name')"
+          />
+          <div v-if="errors.name" class="app-form-error">
+            {{ errors.name }}
+          </div>
+        </div>
+        <div class="app-input-group">
           <label for="password">Password</label>
           <input
             v-model="password"
@@ -82,6 +96,7 @@ const auth = useAuthStore();
 const email = ref("");
 const password = ref("");
 const passwordRepeat = ref("");
+const name = ref("");
 const passwordStrength = ref("");
 const passwordStrengthColor = ref("#888");
 const errors = ref({});
@@ -110,6 +125,10 @@ const checkStrength = () => {
 };
 
 const schema = yup.object({
+  name: yup
+    .string()
+    .matches(/^[A-Za-z ]+$/, "Name must contain only letters and spaces.")
+    .required("Name is required."),
   email: yup
     .string()
     .email("Email is required and must be valid.")
@@ -124,6 +143,7 @@ const schema = yup.object({
 const validateField = async (field) => {
   try {
     await schema.validateAt(field, {
+      name: name.value,
       email: email.value,
       password: password.value,
       passwordRepeat: passwordRepeat.value,
@@ -139,13 +159,14 @@ const onSubmit = async () => {
   try {
     await schema.validate(
       {
+        name: name.value,
         email: email.value,
         password: password.value,
         passwordRepeat: passwordRepeat.value,
       },
       { abortEarly: false }
     );
-    await auth.register(email.value, password.value);
+    await auth.register(email.value, password.value, name.value);
     if (auth.isAuthenticated) {
       router.push("/my-profile");
     } else if (auth.error) {

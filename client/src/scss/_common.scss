@@ -1,5 +1,6 @@
 // Common form styles for the app
 .app-input-group {
+  input[type="text"],
   input[type="email"],
   input[type="password"] {
     @apply w-full px-3 py-2 border rounded-md focus:outline-none ring-1;
