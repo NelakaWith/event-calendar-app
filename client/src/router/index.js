@@ -1,10 +1,10 @@
 // client/src/router/index.js
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../store/auth.js";
-import Home from "../components/AppHome.vue";
-import Login from "../components/AppLogin.vue";
-import Register from "../components/AppRegister.vue";
-import Calendar from "../components/AppCalendar.vue";
+import Home from "../views/AppHome.vue";
+import Login from "../views/AppLogin.vue";
+import Register from "../views/AppRegister.vue";
+import Calendar from "../views/AppCalendar.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
