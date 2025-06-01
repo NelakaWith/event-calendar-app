@@ -51,7 +51,9 @@ export const useAuthStore = defineStore("auth", {
     async checkAuth() {
       this.loading = true;
       try {
-        const res = await axios.get("/api/auth/me", { withCredentials: true });
+        const res = await axios.get("/api/auth/user", {
+          withCredentials: true,
+        });
         this.user = res.data.user;
         this.isAuthenticated = true;
       } catch {
