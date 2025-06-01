@@ -1,4 +1,4 @@
-// Common input styles for the app
+// Common form styles for the app
 .app-input-group {
   input[type="email"],
   input[type="password"] {
@@ -8,6 +8,10 @@
   label {
     @apply block;
     @apply text-gray-700 mb-1;
+  }
+  input[type="checkbox"] {
+    @apply w-3 h-3 cursor-pointer border-solid border-gray-300 appearance-auto;
+    @apply accent-green-500;
   }
 }
 .app-form-error {
