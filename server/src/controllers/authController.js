@@ -28,7 +28,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, keepLoggedIn } = req.body;
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password required." });
     }
@@ -46,7 +46,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       //   secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: keepLoggedIn ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000, // 30 days or 1 day
     });
     res.json({
       message: "Login successful",

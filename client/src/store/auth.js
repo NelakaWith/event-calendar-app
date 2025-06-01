@@ -10,13 +10,13 @@ export const useAuthStore = defineStore("auth", {
     error: null,
   }),
   actions: {
-    async login(email, password) {
+    async login(email, password, keepLoggedIn = false) {
       this.loading = true;
       this.error = null;
       try {
         const res = await axios.post(
           "/api/auth/login",
-          { email, password },
+          { email, password, keepLoggedIn },
           { withCredentials: true }
         );
         this.user = res.data.user;

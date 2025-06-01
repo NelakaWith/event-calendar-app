@@ -37,7 +37,7 @@
         </div>
         <div class="login__container__keep-logged-in">
           <label class="app-input-group">
-            <input type="checkbox" v-model="auth.keepLoggedIn" />
+            <input type="checkbox" v-model="keepLoggedIn" />
             Keep me logged in
           </label>
           <label>Forgot your password?</label>
@@ -64,6 +64,7 @@ const auth = useAuthStore();
 
 const email = ref("");
 const password = ref("");
+const keepLoggedIn = ref(false);
 const errors = ref({});
 
 const schema = yup.object({
@@ -93,7 +94,7 @@ const onSubmit = async () => {
       { email: email.value, password: password.value },
       { abortEarly: false }
     );
-    await auth.login(email.value, password.value);
+    await auth.login(email.value, password.value, keepLoggedIn.value);
     if (auth.isAuthenticated) {
       router.push("/my-profile");
     } else if (auth.error) {
