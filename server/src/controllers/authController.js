@@ -63,3 +63,26 @@ export const logout = (req, res) => {
   });
   res.json({ message: "Logged out successfully" });
 };
+
+export const getUserDetails = [
+  validateToken,
+  async (req, res) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const user = await User.findByPk(userId, {
+        attributes: ["id", "email", "name", "role", "created_at"],
+      });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json({ user });
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: "Failed to fetch user details", error: err.message });
+    }
+  },
+];
