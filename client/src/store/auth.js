@@ -10,13 +10,13 @@ export const useAuthStore = defineStore("auth", {
     error: null,
   }),
   actions: {
-    async login(email, password) {
+    async login(email, password, keepLoggedIn = false) {
       this.loading = true;
       this.error = null;
       try {
         const res = await axios.post(
           "/api/auth/login",
-          { email, password },
+          { email, password, keepLoggedIn },
           { withCredentials: true }
         );
         this.user = res.data.user;
@@ -29,10 +29,31 @@ export const useAuthStore = defineStore("auth", {
         this.loading = false;
       }
     },
+    async register(email, password, name) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const res = await axios.post(
+          "/api/auth/register",
+          { email, password, name },
+          { withCredentials: true }
+        );
+        this.user = res.data.user;
+        this.isAuthenticated = true;
+      } catch (err) {
+        this.error = "Registration failed! Please try again.";
+        this.user = null;
+        this.isAuthenticated = false;
+      } finally {
+        this.loading = false;
+      }
+    },
     async checkAuth() {
       this.loading = true;
       try {
-        const res = await axios.get("/api/auth/me", { withCredentials: true });
+        const res = await axios.get("/api/auth/user", {
+          withCredentials: true,
+        });
         this.user = res.data.user;
         this.isAuthenticated = true;
       } catch {

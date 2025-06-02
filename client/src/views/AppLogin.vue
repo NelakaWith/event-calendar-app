@@ -4,45 +4,35 @@
       <h2>Welcome Back</h2>
       <h3>Please login to continue.</h3>
       <form @submit.prevent="onSubmit" novalidate>
-        <div class="app-input-group">
-          <label for="email">Email</label>
-          <input
-            v-model="email"
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="username"
-            @input="validateField('email')"
-          />
-          <div v-if="errors.email" class="app-form-error">
-            {{ errors.email }}
-          </div>
-        </div>
-        <div class="app-input-group">
-          <label for="password">Password</label>
-          <input
-            v-model="password"
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            @input="validateField('password')"
-          />
-          <div v-if="errors.password" class="app-form-error">
-            {{ errors.password }}
-          </div>
-        </div>
-        <div v-if="errors.form" class="app-form-error">
-          {{ errors.form }}
-        </div>
+        <AppInputGroup
+          label="Email"
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="username"
+          v-model="email"
+          :error="errors.email"
+          @input="validateField('email')"
+        />
+        <AppInputGroup
+          label="Password"
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          v-model="password"
+          :error="errors.password"
+          @input="validateField('password')"
+        />
+        <AppFormError v-if="errors.form" :message="errors.form" />
         <div class="login__container__keep-logged-in">
           <label class="app-input-group">
-            <input type="checkbox" v-model="auth.keepLoggedIn" />
+            <input type="checkbox" v-model="keepLoggedIn" />
             Keep me logged in
           </label>
           <label>Forgot your password?</label>
         </div>
-        <button type="submit" :disabled="!email || !password">Login</button>
+        <button type="submit" :disabled="!isFormValid">Login</button>
       </form>
       <hr />
       <small>
@@ -54,16 +44,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import * as yup from "yup";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/auth";
+import AppInputGroup from "../components/AppInputGroup.vue";
+import AppFormError from "../components/AppFormError.vue";
 
 const router = useRouter();
 const auth = useAuthStore();
 
 const email = ref("");
 const password = ref("");
+const keepLoggedIn = ref(false);
 const errors = ref({});
 
 const schema = yup.object({
@@ -86,6 +79,16 @@ const validateField = async (field) => {
   }
 };
 
+const isFormValid = computed(() => {
+  return (
+    email.value &&
+    password.value &&
+    !errors.value.email &&
+    !errors.value.password &&
+    !errors.value.form
+  );
+});
+
 const onSubmit = async () => {
   errors.value = {};
   try {
@@ -93,9 +96,9 @@ const onSubmit = async () => {
       { email: email.value, password: password.value },
       { abortEarly: false }
     );
-    await auth.login(email.value, password.value);
+    await auth.login(email.value, password.value, keepLoggedIn.value);
     if (auth.isAuthenticated) {
-      router.push("/my-profile");
+      router.push("/calendar");
     } else if (auth.error) {
       errors.value.form = auth.error;
     }
