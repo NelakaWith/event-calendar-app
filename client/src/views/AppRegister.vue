@@ -4,75 +4,54 @@
       <h2>Register</h2>
       <h3>Create a new account to get started.</h3>
       <form @submit.prevent="onSubmit" novalidate>
-        <div class="app-input-group">
-          <label for="email">Email</label>
-          <input
-            v-model="email"
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="username"
-            @input="validateField('email')"
-          />
-          <div v-if="errors.email" class="app-form-error">
-            {{ errors.email }}
-          </div>
-        </div>
-        <div class="app-input-group">
-          <label for="name">Name</label>
-          <input
-            v-model="name"
-            id="name"
-            name="name"
-            type="text"
-            autocomplete="name"
-            @input="validateField('name')"
-          />
-          <div v-if="errors.name" class="app-form-error">
-            {{ errors.name }}
-          </div>
-        </div>
-        <div class="app-input-group">
-          <label for="password">Password</label>
-          <input
-            v-model="password"
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="new-password"
-            @input="
+        <AppInputGroup
+          label="Email"
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="username"
+          v-model="email"
+          :error="errors.email"
+          @input="validateField('email')"
+        />
+        <AppInputGroup
+          label="Name"
+          id="name"
+          name="name"
+          type="text"
+          autocomplete="name"
+          v-model="name"
+          :error="errors.name"
+          @input="validateField('name')"
+        />
+        <AppInputGroup
+          label="Password"
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          v-model="password"
+          :error="errors.password"
+          :hint="`Password is ${passwordStrength}`"
+          :hintColor="passwordStrengthColor"
+          @input="
+            (e) => {
               validateField('password');
               checkStrength();
-            "
-          />
-          <div v-if="errors.password" class="app-form-error">
-            {{ errors.password }}
-          </div>
-          <div
-            v-if="passwordStrength && !errors.password"
-            class="app-form-error"
-            :style="{ color: passwordStrengthColor }"
-          >
-            {{ passwordStrength }}
-          </div>
-        </div>
-        <div class="app-input-group">
-          <label for="passwordRepeat">Repeat Password</label>
-          <input
-            v-model="passwordRepeat"
-            id="passwordRepeat"
-            name="passwordRepeat"
-            type="password"
-            autocomplete="new-password"
-            @input="validateField('passwordRepeat')"
-          />
-          <div v-if="errors.passwordRepeat" class="app-form-error">
-            {{ errors.passwordRepeat }}
-          </div>
-        </div>
-        <div v-if="errors.form" class="app-form-error">
-          {{ errors.form }}
-        </div>
+            }
+          "
+        />
+        <AppInputGroup
+          label="Repeat Password"
+          id="passwordRepeat"
+          name="passwordRepeat"
+          type="password"
+          autocomplete="new-password"
+          v-model="passwordRepeat"
+          :error="errors.passwordRepeat"
+          @input="validateField('passwordRepeat')"
+        />
+        <AppFormError v-if="errors.form" :message="errors.form" />
         <button type="submit" :disabled="!email || !password">Register</button>
       </form>
       <hr />
@@ -89,6 +68,8 @@ import { ref } from "vue";
 import * as yup from "yup";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/auth";
+import AppInputGroup from "../components/AppInputGroup.vue";
+import AppFormError from "../components/AppFormError.vue";
 
 const router = useRouter();
 const auth = useAuthStore();

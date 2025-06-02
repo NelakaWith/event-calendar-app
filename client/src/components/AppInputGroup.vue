@@ -13,6 +13,13 @@
       :autocomplete="autocomplete"
     />
     <AppFormError :message="error" />
+    <div
+      v-if="hint && !error"
+      class="app-form-error"
+      :style="{ color: hintColor }"
+    >
+      {{ hint }}
+    </div>
   </div>
 </template>
 
@@ -29,6 +36,8 @@ const props = defineProps({
   error: { type: String, default: "" },
   autocomplete: { type: String, default: "" },
   inputAttrs: { type: Object, default: () => ({}) },
+  hint: { type: String, default: "" },
+  hintColor: { type: String, default: "#888" },
 });
 
 const emit = defineEmits(["update:modelValue", "input"]);
