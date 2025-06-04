@@ -1,19 +1,11 @@
 <template>
   <div>
-    <h1>Home</h1>
-    <router-link to="/login">Login</router-link> |
-    <router-link to="/register">Register</router-link> |
-    <router-link to="/calendar">Calendar</router-link>
-    <router-view />
+    <!-- AppHeader is now global, no need to include here -->
   </div>
 </template>
 
 <script setup>
-// Home page logic (if any)
+// No header or router-view needed here
 </script>
 
-<style scoped>
-h1 {
-  margin-bottom: 1rem;
-}
-</style>
+<style scoped></style>
