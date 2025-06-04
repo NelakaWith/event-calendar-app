@@ -3,6 +3,12 @@
     <nav class="flex gap-6 text-base items-end">
       <router-link to="/" class="nav-link">Home</router-link>
       <router-link to="/calendar" class="nav-link">Calendar</router-link>
+      <button
+        class="nav-link bg-transparent border-none cursor-pointer"
+        @click="$emit('logout')"
+      >
+        Logout
+      </button>
     </nav>
   </header>
 </template>
