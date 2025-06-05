@@ -1,6 +1,6 @@
 # Event Calendar App – Server
 
-This is the backend for the Event Calendar App, built with Express.js, Sequelize, and MySQL.
+This is the backend for the Event Calendar App, built with Express.js, Sequelize, and MySQL. Now supports deployment as a Netlify serverless function.
 
 ## Features
 
@@ -9,6 +9,7 @@ This is the backend for the Event Calendar App, built with Express.js, Sequelize
 - Sequelize ORM models for User and Event
 - JWT middleware for route protection
 - Environment-based configuration via .env
+- **Serverless support:** Deploy as a Netlify Function using `serverless-http`
 
 ## Project Structure
 
@@ -32,9 +33,10 @@ server/
       sequelize.js
   index.js
   package.json
+  .env
 ```
 
-## Setup
+## Setup (Local Development)
 
 1. Configure your `.env` file with database and JWT settings.
 2. Install dependencies:
@@ -50,7 +52,16 @@ server/
 
 ---
 
+## Netlify Serverless Deployment
+
+- The Express app is exported from `index.js` and used in `netlify/functions/api.js` via `serverless-http`.
+- All environment variables must be set in the Netlify dashboard or in a root `.env` for local Netlify dev.
+- The server will **not** listen on a port when running as a Netlify function.
+
+---
+
 ## Notes
 
 - Make sure your MySQL server is running and the schema is loaded.
 - Update CORS_ORIGIN in `.env` to match your frontend URL if needed.
+- For Netlify, ensure all DB and secret variables are available to the function.

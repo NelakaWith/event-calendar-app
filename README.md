@@ -8,6 +8,7 @@ A full-stack web app to schedule, view, and manage events via an interactive cal
 - **Backend:** Express.js (ES modules), Sequelize ORM, MySQL
 - **Authentication:** JWT, bcrypt, cookies
 - **Utilities:** dotenv, morgan, cookie-parser
+- **Serverless:** Netlify Functions (Express API as serverless)
 
 ---
 
@@ -17,19 +18,27 @@ A full-stack web app to schedule, view, and manage events via an interactive cal
 client/           # Vue 3 frontend (Vite)
   src/
     components/
-      Home.vue
-      Login.vue
-      Register.vue
-      Calendar.vue
+      AppFormError.vue
+      AppHeader.vue
+      AppInputGroup.vue
     router/
       index.js
     scss/
+      _common.scss
       main.scss
+    store/
+      auth.js
+    views/
+      AppCalendar.vue
+      AppHome.vue
+      AppLogin.vue
+      AppRegister.vue
     App.vue
     main.js
   public/
   package.json
   README.md
+  .env
 
 server/           # Express backend (ESM)
   src/
@@ -51,6 +60,12 @@ server/           # Express backend (ESM)
   index.js
   package.json
   README.md
+  .env
+
+netlify/
+  functions/
+    api.js
+netlify.toml
 
 start_servers.cmd # Script to start both servers in separate CMD windows
 README.md         # Monorepo/project overview
@@ -74,7 +89,9 @@ requirements.txt  # Project requirements
      SOURCE server/src/_db/db_sample_data.sql;
      ```
 
-### 2. Backend (Express API)
+### 2. Local Development (Traditional Servers)
+
+#### Backend (Express API)
 
 ```powershell
 cd server
@@ -85,9 +102,9 @@ npm start     # For production
 ```
 
 - The server runs by default on http://localhost:3001
-- Edit `.env` for DB credentials, JWT secret, and CORS_ORIGIN if needed
+- Edit `server/.env` for DB credentials, JWT secret, and CORS_ORIGIN if needed
 
-### 3. Frontend (Vue)
+#### Frontend (Vue)
 
 ```powershell
 cd client
@@ -96,8 +113,9 @@ npm run dev
 ```
 
 - The frontend runs by default on http://localhost:5173
+- Edit `client/.env` for API base URL (see below)
 
-### 4. Start Both Servers (Windows Only)
+#### Start Both Servers (Windows Only)
 
 Double-click or run in PowerShell:
 
@@ -105,7 +123,51 @@ Double-click or run in PowerShell:
 start_servers.cmd
 ```
 
-This will open two CMD windows: one for the backend and one for the frontend.
+---
+
+### 3. Netlify Serverless Deployment
+
+#### a. **Serverless API**
+
+- The Express backend is deployed as a Netlify Function using `serverless-http`.
+- Function entry: `netlify/functions/api.js`
+- All `/api/*` requests are proxied to this function via `netlify.toml`.
+
+#### b. **Frontend**
+
+- The Vue app is built and published from `client/dist`.
+
+#### c. **Environment Variables**
+
+- For Netlify Functions, set all backend environment variables (DB, JWT, etc.) in the Netlify dashboard or in a root `.env` for local `netlify dev`.
+- For the client, set public variables (e.g., `VITE_API_BASE_URL=/`) in `client/.env`.
+
+#### d. **netlify.toml**
+
+```toml
+[build]
+  functions = "netlify/functions"
+  publish = "client/dist"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
+
+#### e. **Local Netlify Dev**
+
+```powershell
+netlify dev
+```
+
+- This will run both the frontend and the serverless backend locally.
+- Ensure you have a root `.env` with all backend variables for local dev.
 
 ---
 
@@ -113,9 +175,10 @@ This will open two CMD windows: one for the backend and one for the frontend.
 
 - User authentication (register/login/logout)
 - Event CRUD APIs (create, read, update, delete)
-- Calendar view (planned)
+- Calendar view (FullCalendar integration)
 - Modular code structure for easy extension
 - Environment-based configuration
+- Netlify Functions serverless backend support
 
 ---
 

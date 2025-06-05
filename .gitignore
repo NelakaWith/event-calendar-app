@@ -39,3 +39,6 @@ server/.env
 client/.cache/
 server/.cache/
 start_servers.cmd
+
+# Local Netlify folder
+.netlify
