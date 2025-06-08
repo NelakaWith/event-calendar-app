@@ -22,8 +22,8 @@
         tabindex="-1"
         aria-label="Toggle password visibility"
       >
-        <span v-if="showPassword">🐵</span>
-        <span v-else>🙈</span>
+        <span v-if="showPassword">🙈</span>
+        <span v-else>🐵</span>
       </button>
     </div>
     <AppFormError :message="error" />
