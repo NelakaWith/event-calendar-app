@@ -1,14 +1,35 @@
 # Event Calendar App – Monorepo
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7e49c57e-3cc8-48c1-bb94-9ed175fe5c82/deploy-status)](https://app.netlify.com/projects/nw-event-calendar-app-client/deploys)
+
 A full-stack web app to schedule, view, and manage events via an interactive calendar interface.
 
 ## Tech Stack
 
-- **Frontend:** Vue 3, Vite, Tailwind CSS, Vue Router, Sass/SCSS
-- **Backend:** Express.js (ES modules), Sequelize ORM, MySQL
+- **Frontend:** Vue 3, Vite, Tailwind CSS, Vue Router, Sass/SCSS (deployed on Netlify)
+- **Backend:** Express.js (ES modules), Sequelize ORM, MySQL (deployed on Railway)
 - **Authentication:** JWT, bcrypt, cookies
 - **Utilities:** dotenv, morgan, cookie-parser
-- **Serverless:** Netlify Functions (Express API as serverless)
+
+---
+
+## Deployment Overview
+
+- **Frontend (App):**
+
+  - Deployed to [Netlify](https://app.netlify.com/projects/nw-event-calendar-app-client/deploys)
+  - Auto-deploys on merge to `main` branch
+  - Uses environment variables for API base URL
+
+- **Backend (API):**
+
+  - Deployed to [Railway](https://railway.app/)
+  - Exposes REST API endpoints for authentication and events
+  - Uses Railway environment variables for DB and secrets
+
+- **Database:**
+  - MySQL database hosted on Railway
+  - Accessible by the backend API
 
 ---
 
@@ -18,21 +39,10 @@ A full-stack web app to schedule, view, and manage events via an interactive cal
 client/           # Vue 3 frontend (Vite)
   src/
     components/
-      AppFormError.vue
-      AppHeader.vue
-      AppInputGroup.vue
     router/
-      index.js
     scss/
-      _common.scss
-      main.scss
     store/
-      auth.js
     views/
-      AppCalendar.vue
-      AppHome.vue
-      AppLogin.vue
-      AppRegister.vue
     App.vue
     main.js
   public/
@@ -43,131 +53,53 @@ client/           # Vue 3 frontend (Vite)
 server/           # Express backend (ESM)
   src/
     controllers/
-      authController.js
-      eventController.js
     middleware/
-      jwt.middleware.js
     models/
-      user.js
-      event.js
     routes/
-      authRoutes.js
-      eventRoutes.js
     _db/
-      db_schema.sql
-      db_sample_data.sql
-      sequelize.js
   index.js
   package.json
   README.md
   .env
 
-netlify/
-  functions/
-    api.js
-netlify.toml
-
-start_servers.cmd # Script to start both servers in separate CMD windows
 README.md         # Monorepo/project overview
-requirements.txt  # Project requirements
 ```
 
 ---
 
 ## Setup Instructions
 
-### 1. Database (MySQL)
+### 1. Database (MySQL on Railway)
 
-- Create the database and tables:
-  1. Open a MySQL client (e.g., MySQL Workbench, CLI)
-  2. Run the schema script:
-     ```sql
-     SOURCE server/src/_db/db_schema.sql;
-     ```
-  3. (Optional) Add sample data:
-     ```sql
-     SOURCE server/src/_db/db_sample_data.sql;
-     ```
+- Create your database on Railway and note the connection details.
+- Import schema and sample data using the Railway SQL console or MySQL CLI:
+  ```powershell
+  mysql -h <host> -P <port> -u <user> -p<password> <database> < server/src/_db/db_schema.sql
+  mysql -h <host> -P <port> -u <user> -p<password> <database> < server/src/_db/db_sample_data.sql
+  ```
 
-### 2. Local Development (Traditional Servers)
+### 2. Backend (Express API on Railway)
 
-#### Backend (Express API)
+- Deploy the `server` folder to Railway as a Node.js service.
+- Set environment variables in Railway for DB connection and JWT secrets.
+- The API will be available at the Railway-provided URL (e.g., `https://your-api.up.railway.app`).
 
-```powershell
-cd server
-npm install
-npm run dev   # For development (nodemon)
-# or
-npm start     # For production
-```
+### 3. Frontend (Vue on Netlify)
 
-- The server runs by default on http://localhost:3001
-- Edit `server/.env` for DB credentials, JWT secret, and CORS_ORIGIN if needed
-
-#### Frontend (Vue)
-
-```powershell
-cd client
-npm install
-npm run dev
-```
-
-- The frontend runs by default on http://localhost:5173
-- Edit `client/.env` for API base URL (see below)
-
-#### Start Both Servers (Windows Only)
-
-Double-click or run in PowerShell:
-
-```powershell
-start_servers.cmd
-```
+- Deploy the `client` folder to Netlify.
+- Set `VITE_API_BASE_URL` in Netlify environment variables to your Railway API URL (e.g., `https://your-api.up.railway.app`).
+- Netlify will auto-deploy on merge to `main`.
 
 ---
 
-### 3. Netlify Serverless Deployment
+## Environment Variables
 
-#### a. **Serverless API**
-
-- The Express backend is deployed as a Netlify Function using `serverless-http`.
-- Function entry: `netlify/functions/api.js`
-- All `/api/*` requests are proxied to this function via `netlify.toml`.
-
-#### b. **Frontend**
-
-- The Vue app is built and published from `client/dist`.
-
-#### c. **Environment Variables**
-
-- For Netlify Functions, set all backend environment variables (DB, JWT, etc.) in the Netlify dashboard or in a root `.env` for local `netlify dev`.
-- For the client, set public variables (e.g., `VITE_API_BASE_URL=/`) in `client/.env`.
-
-#### d. **netlify.toml**
-
-```toml
-[build]
-  functions = "netlify/functions"
-  publish = "client/dist"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-```
-
-#### e. **Local Netlify Dev**
-
-```powershell
-netlify dev
-```
-
-- This will run both the frontend and the serverless backend locally.
-- Ensure you have a root `.env` with all backend variables for local dev.
+- **Frontend (Netlify):**
+  - `VITE_API_BASE_URL=https://your-api.up.railway.app`
+- **Backend (Railway):**
+  - `DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`, `DB_DIALECT=mysql`
+  - `JWT_SECRET`, `JWT_SECRET_CURRENT`, `JWT_SECRET_PREVIOUS`
+  - `CORS_ORIGIN=https://your-netlify-app.netlify.app`
 
 ---
 
@@ -178,7 +110,7 @@ netlify dev
 - Calendar view (FullCalendar integration)
 - Modular code structure for easy extension
 - Environment-based configuration
-- Netlify Functions serverless backend support
+- CI/CD: Code auto-deploys to Netlify on merge to `main`
 
 ---
 
