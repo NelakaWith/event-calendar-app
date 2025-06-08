@@ -32,7 +32,7 @@
           autocomplete="new-password"
           v-model="password"
           :error="errors.password"
-          :hint="`Password is ${passwordStrength}`"
+          :hint="`${passwordStrength}`"
           :hintColor="passwordStrengthColor"
           @input="
             (e) => {
