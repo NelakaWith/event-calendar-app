@@ -20,10 +20,10 @@
         class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 focus:outline-none"
         @click="togglePassword"
         tabindex="-1"
-        aria-label="Toggle password visibility"
+        :aria-label="passwordToggleLabel"
       >
-        <span v-if="showPassword">🐵</span>
-        <span v-else>🙈</span>
+        <span v-if="showPassword">🙈</span>
+        <span v-else>🐵</span>
       </button>
     </div>
     <AppFormError :message="error" />
