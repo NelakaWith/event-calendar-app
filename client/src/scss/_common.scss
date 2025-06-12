@@ -2,19 +2,28 @@
 .app-input-group {
   input[type="text"],
   input[type="email"],
-  input[type="password"] {
+  input[type="password"],
+  textarea {
     @apply w-full px-3 py-2 border rounded-md focus:outline-none ring-1;
     @apply focus:ring-green-600 ring-green-400;
   }
   label {
-    @apply block;
-    @apply text-gray-700 mb-1;
+    @apply block mb-1;
+    @apply text-gray-700;
   }
   input[type="checkbox"] {
-    @apply w-3 h-3 cursor-pointer border-solid border-gray-300 appearance-auto;
-    @apply accent-green-500;
+    @apply w-3 h-3 cursor-pointer border-solid appearance-auto;
+    @apply accent-green-500 border-gray-300;
   }
 }
 .app-form-error {
   @apply text-red-600 text-sm mb-2 mt-1;
+}
+
+button[type="submit"] {
+  @apply w-full py-2 transition rounded;
+  @apply bg-green-500 text-white hover:bg-green-600;
+  &:disabled {
+    @apply bg-gray-400 cursor-not-allowed;
+  }
 }

@@ -9,7 +9,6 @@
           id="email"
           name="email"
           type="email"
-          autocomplete="username"
           v-model="email"
           :error="errors.email"
           @input="validateField('email')"
@@ -19,7 +18,6 @@
           id="name"
           name="name"
           type="text"
-          autocomplete="name"
           v-model="name"
           :error="errors.name"
           @input="validateField('name')"
@@ -29,7 +27,6 @@
           id="password"
           name="password"
           type="password"
-          autocomplete="new-password"
           v-model="password"
           :error="errors.password"
           :hint="`${passwordStrength}`"
@@ -46,13 +43,12 @@
           id="passwordRepeat"
           name="passwordRepeat"
           type="password"
-          autocomplete="new-password"
           v-model="passwordRepeat"
           :error="errors.passwordRepeat"
           @input="validateField('passwordRepeat')"
         />
         <AppFormError v-if="errors.form" :message="errors.form" />
-        <button type="submit" :disabled="!email || !password">Register</button>
+        <button type="submit" :disabled="!isFormValid">Register</button>
       </form>
       <hr />
       <small>
@@ -64,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import * as yup from "yup";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/auth";
@@ -106,14 +102,14 @@ const checkStrength = () => {
 };
 
 const schema = yup.object({
-  name: yup
-    .string()
-    .matches(/^[A-Za-z ]+$/, "Name must contain only letters and spaces.")
-    .required("Name is required."),
   email: yup
     .string()
     .email("Email is required and must be valid.")
     .required("Email is required and must be valid."),
+  name: yup
+    .string()
+    .matches(/^[A-Za-z ]+$/, "Name must contain only letters and spaces.")
+    .required("Name is required."),
   password: yup.string().required("Password is required."),
   passwordRepeat: yup
     .string()
@@ -134,6 +130,29 @@ const validateField = async (field) => {
     errors.value[field] = err.message;
   }
 };
+
+function allFieldsFilled() {
+  return email.value && password.value && name.value && passwordRepeat.value;
+}
+
+function hasAnyError() {
+  return (
+    errors.value.email ||
+    errors.value.password ||
+    errors.value.name ||
+    errors.value.passwordRepeat ||
+    errors.value.form
+  );
+}
+
+const isFormValid = computed(() => {
+  return allFieldsFilled() && !hasAnyError();
+});
+
+watch([email, password, name, passwordRepeat], () => {
+  // Clear form-level error as soon as any input changes
+  if (errors.value.form) errors.value.form = "";
+});
 
 const onSubmit = async () => {
   errors.value = {};
