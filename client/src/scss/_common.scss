@@ -18,3 +18,11 @@
 .app-form-error {
   @apply text-red-600 text-sm mb-2 mt-1;
 }
+
+button[type="submit"] {
+  @apply w-full py-2 transition rounded;
+  @apply bg-green-500 text-white hover:bg-green-600;
+  &:disabled {
+    @apply bg-gray-400 cursor-not-allowed;
+  }
+}

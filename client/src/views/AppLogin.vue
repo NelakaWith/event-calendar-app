@@ -139,13 +139,6 @@ const onSubmit = async () => {
     form {
       @apply space-y-4 mb-6;
     }
-    button {
-      @apply w-full py-2 transition rounded;
-      @apply bg-green-500 text-white hover:bg-green-600;
-      &:disabled {
-        @apply bg-gray-400 cursor-not-allowed;
-      }
-    }
     hr {
       @apply my-6 border-gray-300;
     }
