@@ -36,13 +36,11 @@
         @input="validateField('end_time')"
       />
     </div>
-    <div>
-      <label class="block mb-1 text-gray-700">Description</label>
-      <textarea
-        v-model="description"
-        class="w-full border rounded px-2 py-1"
-        rows="2"
-      ></textarea>
+    <div class="app-input-group">
+      <label for="description" class="block mb-1 text-gray-700">
+        Description
+      </label>
+      <textarea v-model="description" id="description" rows="2"></textarea>
     </div>
     <div class="flex justify-end">
       <button

@@ -9,7 +9,7 @@
       :enable-time-picker="true"
       :minute-increment="5"
       :format="'yyyy-MM-dd HH:mm'"
-      :input-class="'w-full border rounded px-2 py-1'"
+      input-class="app-date-time-picker"
       @update:model-value="onInput"
     />
     <AppFormError :message="error" />
@@ -49,9 +49,9 @@ const onInput = (val) => {
   emit("input", val);
 };
 </script>
-
-<style scoped>
-.app-input-group {
-  margin-bottom: 1rem;
+<style lang="scss" scoped>
+.dp__input {
+  @apply w-full px-3 py-2 border rounded-md focus:outline-none ring-1;
+  @apply focus:ring-green-600 ring-green-400;
 }
 </style>

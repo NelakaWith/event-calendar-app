@@ -2,7 +2,8 @@
 .app-input-group {
   input[type="text"],
   input[type="email"],
-  input[type="password"] {
+  input[type="password"],
+  textarea {
     @apply w-full px-3 py-2 border rounded-md focus:outline-none ring-1;
     @apply focus:ring-green-600 ring-green-400;
   }

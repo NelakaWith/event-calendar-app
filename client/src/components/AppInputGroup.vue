@@ -20,7 +20,7 @@
         class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 focus:outline-none"
         @click="togglePassword"
         tabindex="-1"
-        aria-label="password toggle"
+        :aria-label="showPassword ? 'Hide password' : 'Show password'"
       >
         <span v-if="showPassword">🙈</span>
         <span v-else>🐵</span>
@@ -48,7 +48,7 @@ const props = defineProps({
   name: { type: String, default: "" },
   type: { type: String, default: "text" },
   error: { type: String, default: "" },
-  autocomplete: { type: String, default: "" },
+  autocomplete: { type: String, default: "off" },
   inputAttrs: { type: Object, default: () => ({}) },
   hint: { type: String, default: "" },
   hintColor: { type: String, default: "#888" },

@@ -135,20 +135,23 @@ const validateField = async (field) => {
   }
 };
 
+function hasFieldErrors() {
+  return (
+    errors.value.email ||
+    errors.value.password ||
+    errors.value.name ||
+    errors.value.passwordRepeat
+  );
+}
+
+function isFormErrorBlocking() {
+  // Only block if there is a form error and no field errors
+  return errors.value.form && !hasFieldErrors();
+}
+
 const isFormValid = computed(() => {
   return (
-    email.value &&
-    password.value &&
-    !errors.value.email &&
-    !errors.value.password &&
-    !errors.value.name &&
-    !errors.value.passwordRepeat &&
-    // Only disable if there is a form error AND the user hasn't started correcting input
-    (!errors.value.form ||
-      (!errors.value.email &&
-        !errors.value.password &&
-        !errors.value.name &&
-        !errors.value.passwordRepeat))
+    email.value && password.value && !hasFieldErrors() && !isFormErrorBlocking()
   );
 });
 
