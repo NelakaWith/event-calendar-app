@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import * as yup from "yup";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/auth";
@@ -85,8 +85,12 @@ const isFormValid = computed(() => {
     password.value &&
     !errors.value.email &&
     !errors.value.password &&
-    !errors.value.form
+    (!errors.value.form || (!errors.value.email && !errors.value.password))
   );
+});
+
+watch([email, password], () => {
+  if (errors.value.form) errors.value.form = "";
 });
 
 const onSubmit = async () => {

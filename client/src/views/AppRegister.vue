@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import * as yup from "yup";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/auth";
@@ -134,6 +134,28 @@ const validateField = async (field) => {
     errors.value[field] = err.message;
   }
 };
+
+const isFormValid = computed(() => {
+  return (
+    email.value &&
+    password.value &&
+    !errors.value.email &&
+    !errors.value.password &&
+    !errors.value.name &&
+    !errors.value.passwordRepeat &&
+    // Only disable if there is a form error AND the user hasn't started correcting input
+    (!errors.value.form ||
+      (!errors.value.email &&
+        !errors.value.password &&
+        !errors.value.name &&
+        !errors.value.passwordRepeat))
+  );
+});
+
+watch([email, password, name, passwordRepeat], () => {
+  // Clear form-level error as soon as any input changes
+  if (errors.value.form) errors.value.form = "";
+});
 
 const onSubmit = async () => {
   errors.value = {};
