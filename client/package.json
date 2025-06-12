@@ -23,6 +23,7 @@
     "yup": "^1.6.1"
   },
   "devDependencies": {
+    "@stackbit/types": "^2.1.14",
     "@vitejs/plugin-vue": "^5.2.3",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
