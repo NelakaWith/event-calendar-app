@@ -18,7 +18,7 @@
       :error="errors.location"
       @input="validateField('location')"
     />
-    <div class="flex gap-4">
+    <div class="flex justify-between">
       <AppDateTimePicker
         label="Start Time"
         id="start_time"
@@ -37,7 +37,7 @@
       />
     </div>
     <div>
-      <label class="block mb-1 font-semibold">Description</label>
+      <label class="block mb-1 text-gray-700">Description</label>
       <textarea
         v-model="description"
         class="w-full border rounded px-2 py-1"
