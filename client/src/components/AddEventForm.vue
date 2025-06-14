@@ -46,6 +46,7 @@
       <button
         type="submit"
         class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        :disabled="!isFormValid"
       >
         {{ mode === "edit" ? "Save Changes" : "Add Event" }}
       </button>
@@ -55,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import * as yup from "yup";
 import AppInputGroup from "./AppInputGroup.vue";
 import AppFormError from "./AppFormError.vue";
@@ -143,6 +144,19 @@ const onSubmit = async () => {
     }
   }
 };
+
+const isFormValid = computed(() => {
+  return (
+    title.value &&
+    start_time.value &&
+    end_time.value &&
+    !errors.value.title &&
+    !errors.value.start_time &&
+    !errors.value.end_time &&
+    !errors.value.location &&
+    !error.value
+  );
+});
 
 // Reset form fields when the modal is closed
 watch(
