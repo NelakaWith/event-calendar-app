@@ -22,6 +22,7 @@
         <AddEventForm
           v-if="selectedEvent"
           :showForm="showEditModal"
+          :mode="'edit'"
           :initial-title="selectedEvent.title"
           :initial-location="selectedEvent.location"
           :initial-description="selectedEvent.description"

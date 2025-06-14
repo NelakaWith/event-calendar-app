@@ -47,7 +47,7 @@
         type="submit"
         class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
       >
-        Add Event
+        {{ mode === "edit" ? "Save Changes" : "Add Event" }}
       </button>
     </div>
     <AppFormError v-if="error" :message="error" />
@@ -69,6 +69,7 @@ const props = defineProps({
   initialDescription: { type: String, default: "" },
   initialStartTime: { type: [String, Date], default: "" },
   initialEndTime: { type: [String, Date], default: "" },
+  mode: { type: String, default: "add" }, // 'add' or 'edit'
 });
 
 const title = ref(props.initialTitle);
