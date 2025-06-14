@@ -22,8 +22,13 @@ export const createEvent = async (req, res) => {
         .status(400)
         .json({ message: "Title, start_time, and end_time are required." });
     }
-    // Get user_id from authenticated user or request body
-    const user_id = req.user?.id || req.body.user_id;
+    // Only allow user_id from authenticated user
+    if (!req.user || !req.user.id) {
+      return res
+        .status(401)
+        .json({ message: "Authentication required to create events." });
+    }
+    const user_id = req.user.id;
     // Create event in database
     const event = await Event.create({
       user_id,
