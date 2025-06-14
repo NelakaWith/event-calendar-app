@@ -84,3 +84,11 @@ The app will run at http://localhost:5173 by default.
 - Update API endpoints in your code to match your backend server if needed.
 - You can add more routes and components as your app grows.
 - For Netlify, ensure your `.env` is set up for the correct environment.
+
+---
+
+## Prop Naming Convention
+
+In all Vue components, prop names are defined in camelCase in the `<script>` section (e.g., `initialTitle`) and should be referenced in templates using kebab-case (e.g., `:initial-title="..."`).
+
+Vue automatically normalizes these, so both work, but following this convention improves code readability and consistency for all contributors.
