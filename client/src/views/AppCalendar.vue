@@ -1,12 +1,6 @@
 <template>
   <div class="calendar">
     <div class="calendar-container">
-      <button
-        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
-        @click="showModal = true"
-      >
-        + Add Event
-      </button>
       <AppModal
         :show="showModal"
         title="Add New Event"
@@ -68,9 +62,17 @@ const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: "dayGridMonth",
   headerToolbar: {
-    left: "prev,next today",
+    left: "prev,next today addEventButton",
     center: "title",
     right: "dayGridMonth,timeGridWeek,timeGridDay",
+  },
+  customButtons: {
+    addEventButton: {
+      text: "+ Add Event",
+      click() {
+        showModal.value = true;
+      },
+    },
   },
   editable: true,
   selectable: true,
