@@ -44,9 +44,8 @@ export const login = async (req, res) => {
     const token = createTokens({ userId: user.email, id: user.id });
     res.cookie("access-token", token, {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      // 30 days or 2 hours
+      secure: process.env.NODE_ENV === "production", // Secure in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Required for cross-site cookies
       maxAge: keepLoggedIn ? 30 * 24 * 60 * 60 * 1000 : 120 * 60 * 1000,
     });
     res.json({
