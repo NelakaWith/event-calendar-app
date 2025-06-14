@@ -66,19 +66,32 @@ const calendarOptions = ref({
   events: [],
 });
 
+async function fetchEvents() {
+  try {
+    const res = await axios.get("/api/events", { withCredentials: true });
+    calendarOptions.value.events = res.data.events.map((event) => ({
+      title: event.title,
+      start: event.start_time,
+      end: event.end_time,
+      description: event.description,
+      location: event.location,
+      id: event.id,
+    }));
+  } catch (err) {
+    alert(
+      "Failed to load events: " + (err.response?.data?.message || err.message)
+    );
+  }
+}
+
+onMounted(fetchEvents);
+
 async function handleAddEventModal(event) {
   try {
     const res = await axios.post("/api/events", event, {
       withCredentials: true,
     });
-    calendarOptions.value.events.push({
-      title: res.data.event.title,
-      start: res.data.event.start_time,
-      end: res.data.event.end_time,
-      description: res.data.event.description,
-      location: res.data.event.location,
-      id: res.data.event.id,
-    });
+    await fetchEvents();
     showModal.value = false;
   } catch (err) {
     alert(
@@ -102,27 +115,10 @@ function handleEventClick(info) {
 
 async function handleEditEventModal(editedEvent) {
   try {
-    const res = await axios.put(
-      `/api/events/${selectedEvent.value.id}`,
-      editedEvent,
-      {
-        withCredentials: true,
-      }
-    );
-    // Update the event in the calendar
-    const idx = calendarOptions.value.events.findIndex(
-      (e) => e.id == selectedEvent.value.id
-    );
-    if (idx !== -1) {
-      calendarOptions.value.events[idx] = {
-        ...calendarOptions.value.events[idx],
-        ...editedEvent,
-        ...{
-          start: editedEvent.start_time,
-          end: editedEvent.end_time,
-        },
-      };
-    }
+    await axios.put(`/api/events/${selectedEvent.value.id}`, editedEvent, {
+      withCredentials: true,
+    });
+    await fetchEvents();
     showEditModal.value = false;
     selectedEvent.value = null;
   } catch (err) {
@@ -133,22 +129,4 @@ async function handleEditEventModal(editedEvent) {
 }
 
 calendarOptions.value.eventClick = handleEventClick;
-
-onMounted(async () => {
-  try {
-    const res = await axios.get("/api/events", { withCredentials: true });
-    calendarOptions.value.events = res.data.events.map((event) => ({
-      title: event.title,
-      start: event.start_time,
-      end: event.end_time,
-      description: event.description,
-      location: event.location,
-      id: event.id,
-    }));
-  } catch (err) {
-    alert(
-      "Failed to load events: " + (err.response?.data?.message || err.message)
-    );
-  }
-});
 </script>
