@@ -18,7 +18,7 @@
       :error="errors.location"
       @input="validateField('location')"
     />
-    <div class="flex justify-between">
+    <div class="flex justify-between space-x-4">
       <AppDateTimePicker
         label="Start Time"
         id="start_time"
@@ -46,8 +46,9 @@
       <button
         type="submit"
         class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        :disabled="!isFormValid"
       >
-        Add Event
+        {{ mode === "edit" ? "Save Changes" : "Add Event" }}
       </button>
     </div>
     <AppFormError v-if="error" :message="error" />
@@ -55,19 +56,28 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import * as yup from "yup";
-import AppInputGroup from "./AppInputGroup.vue";
-import AppFormError from "./AppFormError.vue";
-import AppDateTimePicker from "./AppDateTimePicker.vue";
+import AppInputGroup from "../form/AppInputGroup.vue";
+import AppFormError from "../form/AppFormError.vue";
+import AppDateTimePicker from "../form/AppDateTimePicker.vue";
 
 const emit = defineEmits(["event-added"]);
-const props = defineProps({ showForm: { type: Boolean, default: true } });
-const title = ref("");
-const description = ref("");
-const start_time = ref("");
-const end_time = ref("");
-const location = ref("");
+const props = defineProps({
+  showForm: { type: Boolean, default: true },
+  initialTitle: { type: String, default: "" },
+  initialLocation: { type: String, default: "" },
+  initialDescription: { type: String, default: "" },
+  initialStartTime: { type: [String, Date], default: "" },
+  initialEndTime: { type: [String, Date], default: "" },
+  mode: { type: String, default: "add" }, // 'add' or 'edit'
+});
+
+const title = ref(props.initialTitle);
+const description = ref(props.initialDescription);
+const start_time = ref(props.initialStartTime);
+const end_time = ref(props.initialEndTime);
+const location = ref(props.initialLocation);
 const error = ref("");
 const errors = ref({});
 
@@ -135,16 +145,29 @@ const onSubmit = async () => {
   }
 };
 
+const isFormValid = computed(() => {
+  return (
+    title.value &&
+    start_time.value &&
+    end_time.value &&
+    !errors.value.title &&
+    !errors.value.start_time &&
+    !errors.value.end_time &&
+    !errors.value.location &&
+    !error.value
+  );
+});
+
 // Reset form fields when the modal is closed
 watch(
   () => props.showForm,
   (val) => {
     if (!val) {
-      title.value = "";
-      description.value = "";
-      start_time.value = "";
-      end_time.value = "";
-      location.value = "";
+      title.value = props.initialTitle;
+      description.value = props.initialDescription;
+      start_time.value = props.initialStartTime;
+      end_time.value = props.initialEndTime;
+      location.value = props.initialLocation;
       error.value = "";
       errors.value = {};
     }

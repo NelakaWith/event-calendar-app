@@ -17,7 +17,7 @@ A full-stack web app to schedule, view, and manage events via an interactive cal
 
 - **Frontend (App):**
 
-  - Deployed to [Netlify](https://app.netlify.com/projects/nw-event-calendar-app-client/deploys)
+  - Deployed to [Netlify](https://nw-event-calendar-app-client.netlify.app/)
   - Auto-deploys on merge to `main` branch
   - Uses environment variables for API base URL
 

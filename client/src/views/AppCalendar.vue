@@ -14,26 +14,56 @@
       >
         <AddEventForm @event-added="handleAddEventModal" />
       </AppModal>
+      <AppModal
+        :show="showEditModal"
+        title="Edit Event"
+        @close="showEditModal = false"
+      >
+        <AddEventForm
+          v-if="selectedEvent"
+          :showForm="showEditModal"
+          :mode="'edit'"
+          :initial-title="selectedEvent.title"
+          :initial-location="selectedEvent.location"
+          :initial-description="selectedEvent.description"
+          :initial-start-time="selectedEvent.start_time"
+          :initial-end-time="selectedEvent.end_time"
+          @event-added="handleEditEventModal"
+        />
+      </AppModal>
       <FullCalendar
         :options="calendarOptions"
         style="max-width: 1000px; margin: 0 auto"
+      />
+      <AppNotification
+        v-if="notification.show"
+        :message="notification.message"
+        :type="notification.type"
+        @close="notification.show = false"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+// Imports
+import { ref, onMounted } from "vue";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import AddEventForm from "../components/AddEventForm.vue";
-import AppModal from "../components/AppModal.vue";
+import AddEventForm from "../components/calendar/AddEventForm.vue";
+import AppModal from "../components/modal/AppModal.vue";
+import AppNotification from "../components/AppNotification.vue";
 import axios from "axios";
 
+// State
 const showModal = ref(false);
+const showEditModal = ref(false);
+const selectedEvent = ref(null);
+const notification = ref({ message: "", type: "error", show: false });
 
+// Calendar options
 const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: "dayGridMonth",
@@ -47,24 +77,80 @@ const calendarOptions = ref({
   events: [],
 });
 
-async function handleAddEventModal(event) {
+// Notification helper
+function showNotification(message, type = "error") {
+  notification.value = { message, type, show: true };
+}
+
+// Fetch events from backend
+async function fetchEvents() {
   try {
-    const res = await axios.post("/api/events", event, {
-      withCredentials: true,
-    });
-    calendarOptions.value.events.push({
-      title: res.data.event.title,
-      start: res.data.event.start_time,
-      end: res.data.event.end_time,
-      description: res.data.event.description,
-      location: res.data.event.location,
-      id: res.data.event.id,
-    });
-    showModal.value = false;
+    const res = await axios.get("/api/events", { withCredentials: true });
+    calendarOptions.value.events = res.data.events.map((event) => ({
+      title: event.title,
+      start: event.start_time,
+      end: event.end_time,
+      description: event.description,
+      location: event.location,
+      id: event.id,
+    }));
   } catch (err) {
-    alert(
-      "Failed to add event: " + (err.response?.data?.message || err.message)
+    showNotification(
+      "Failed to load events: " + (err.response?.data?.message || err.message),
+      "error"
     );
   }
 }
+
+// Add event handler
+async function handleAddEventModal(event) {
+  try {
+    await axios.post("/api/events", event, { withCredentials: true });
+    await fetchEvents();
+    showModal.value = false;
+    showNotification("Event added successfully!", "success");
+  } catch (err) {
+    showNotification(
+      "Failed to add event: " + (err.response?.data?.message || err.message),
+      "error"
+    );
+  }
+}
+
+// Edit event handler
+async function handleEditEventModal(editedEvent) {
+  try {
+    await axios.put(`/api/events/${selectedEvent.value.id}`, editedEvent, {
+      withCredentials: true,
+    });
+    await fetchEvents();
+    showEditModal.value = false;
+    selectedEvent.value = null;
+    showNotification("Event updated successfully!", "success");
+  } catch (err) {
+    showNotification(
+      "Failed to update event: " + (err.response?.data?.message || err.message),
+      "error"
+    );
+  }
+}
+
+// Event click handler
+function handleEventClick(info) {
+  selectedEvent.value = {
+    id: info.event.id,
+    title: info.event.title,
+    description: info.event.extendedProps.description,
+    start_time: info.event.start,
+    end_time: info.event.end,
+    location: info.event.extendedProps.location,
+  };
+  showEditModal.value = true;
+}
+
+// Register event click handler
+calendarOptions.value.eventClick = handleEventClick;
+
+// Fetch events on mount
+onMounted(fetchEvents);
 </script>

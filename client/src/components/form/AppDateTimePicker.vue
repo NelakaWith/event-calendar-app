@@ -1,5 +1,5 @@
 <template>
-  <div class="app-input-group">
+  <div class="flex-1">
     <label :for="id">{{ label }}</label>
     <Datepicker
       v-bind="inputAttrs"
@@ -50,8 +50,8 @@ const onInput = (val) => {
 };
 </script>
 <style lang="scss" scoped>
-.dp__input {
-  @apply w-full px-3 py-2 border rounded-md focus:outline-none ring-1;
+:deep(.dp__input) {
+  @apply w-full px-3 py-2 ps-10 border rounded-md focus:outline-none ring-1;
   @apply focus:ring-green-600 ring-green-400;
 }
 </style>

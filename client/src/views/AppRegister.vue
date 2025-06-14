@@ -64,8 +64,8 @@ import { ref, computed, watch } from "vue";
 import * as yup from "yup";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/auth";
-import AppInputGroup from "../components/AppInputGroup.vue";
-import AppFormError from "../components/AppFormError.vue";
+import AppInputGroup from "../components/form/AppInputGroup.vue";
+import AppFormError from "../components/form/AppFormError.vue";
 
 const router = useRouter();
 const auth = useAuthStore();
