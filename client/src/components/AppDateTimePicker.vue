@@ -51,7 +51,7 @@ const onInput = (val) => {
 </script>
 <style lang="scss" scoped>
 :deep(.dp__input) {
-  @apply w-full px-3 py-2 border rounded-md focus:outline-none ring-1;
+  @apply w-full px-3 py-2 ps-10 border rounded-md focus:outline-none ring-1;
   @apply focus:ring-green-600 ring-green-400;
 }
 </style>

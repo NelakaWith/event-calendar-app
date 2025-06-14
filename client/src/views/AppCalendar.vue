@@ -14,6 +14,22 @@
       >
         <AddEventForm @event-added="handleAddEventModal" />
       </AppModal>
+      <AppModal
+        :show="showEditModal"
+        title="Edit Event"
+        @close="showEditModal = false"
+      >
+        <AddEventForm
+          v-if="selectedEvent"
+          :showForm="showEditModal"
+          :initial-title="selectedEvent.title"
+          :initial-location="selectedEvent.location"
+          :initial-description="selectedEvent.description"
+          :initial-start-time="selectedEvent.start_time"
+          :initial-end-time="selectedEvent.end_time"
+          @event-added="handleEditEventModal"
+        />
+      </AppModal>
       <FullCalendar
         :options="calendarOptions"
         style="max-width: 1000px; margin: 0 auto"
@@ -33,6 +49,8 @@ import AppModal from "../components/AppModal.vue";
 import axios from "axios";
 
 const showModal = ref(false);
+const selectedEvent = ref(null);
+const showEditModal = ref(false);
 
 const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -67,6 +85,53 @@ async function handleAddEventModal(event) {
     );
   }
 }
+
+function handleEventClick(info) {
+  // info.event is a FullCalendar EventApi object
+  selectedEvent.value = {
+    id: info.event.id,
+    title: info.event.title,
+    description: info.event.extendedProps.description,
+    start_time: info.event.start,
+    end_time: info.event.end,
+    location: info.event.extendedProps.location,
+  };
+  showEditModal.value = true;
+}
+
+async function handleEditEventModal(editedEvent) {
+  try {
+    const res = await axios.put(
+      `/api/events/${selectedEvent.value.id}`,
+      editedEvent,
+      {
+        withCredentials: true,
+      }
+    );
+    // Update the event in the calendar
+    const idx = calendarOptions.value.events.findIndex(
+      (e) => e.id == selectedEvent.value.id
+    );
+    if (idx !== -1) {
+      calendarOptions.value.events[idx] = {
+        ...calendarOptions.value.events[idx],
+        ...editedEvent,
+        ...{
+          start: editedEvent.start_time,
+          end: editedEvent.end_time,
+        },
+      };
+    }
+    showEditModal.value = false;
+    selectedEvent.value = null;
+  } catch (err) {
+    alert(
+      "Failed to update event: " + (err.response?.data?.message || err.message)
+    );
+  }
+}
+
+calendarOptions.value.eventClick = handleEventClick;
 
 onMounted(async () => {
   try {

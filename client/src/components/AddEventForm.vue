@@ -62,12 +62,20 @@ import AppFormError from "./AppFormError.vue";
 import AppDateTimePicker from "./AppDateTimePicker.vue";
 
 const emit = defineEmits(["event-added"]);
-const props = defineProps({ showForm: { type: Boolean, default: true } });
-const title = ref("");
-const description = ref("");
-const start_time = ref("");
-const end_time = ref("");
-const location = ref("");
+const props = defineProps({
+  showForm: { type: Boolean, default: true },
+  initialTitle: { type: String, default: "" },
+  initialLocation: { type: String, default: "" },
+  initialDescription: { type: String, default: "" },
+  initialStartTime: { type: [String, Date], default: "" },
+  initialEndTime: { type: [String, Date], default: "" },
+});
+
+const title = ref(props.initialTitle);
+const description = ref(props.initialDescription);
+const start_time = ref(props.initialStartTime);
+const end_time = ref(props.initialEndTime);
+const location = ref(props.initialLocation);
 const error = ref("");
 const errors = ref({});
 
@@ -140,11 +148,11 @@ watch(
   () => props.showForm,
   (val) => {
     if (!val) {
-      title.value = "";
-      description.value = "";
-      start_time.value = "";
-      end_time.value = "";
-      location.value = "";
+      title.value = props.initialTitle;
+      description.value = props.initialDescription;
+      start_time.value = props.initialStartTime;
+      end_time.value = props.initialEndTime;
+      location.value = props.initialLocation;
       error.value = "";
       errors.value = {};
     }
