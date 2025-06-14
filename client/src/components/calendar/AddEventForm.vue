@@ -58,9 +58,9 @@
 <script setup>
 import { ref, watch, computed } from "vue";
 import * as yup from "yup";
-import AppInputGroup from "./AppInputGroup.vue";
-import AppFormError from "./AppFormError.vue";
-import AppDateTimePicker from "./AppDateTimePicker.vue";
+import AppInputGroup from "../form/AppInputGroup.vue";
+import AppFormError from "../form/AppFormError.vue";
+import AppDateTimePicker from "../form/AppDateTimePicker.vue";
 
 const emit = defineEmits(["event-added"]);
 const props = defineProps({

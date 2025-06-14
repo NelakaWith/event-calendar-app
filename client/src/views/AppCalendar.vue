@@ -45,8 +45,8 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import AddEventForm from "../components/AddEventForm.vue";
-import AppModal from "../components/AppModal.vue";
+import AddEventForm from "../components/calendar/AddEventForm.vue";
+import AppModal from "../components/modal/AppModal.vue";
 import axios from "axios";
 
 const showModal = ref(false);
