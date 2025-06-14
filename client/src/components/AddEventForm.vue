@@ -18,7 +18,7 @@
       :error="errors.location"
       @input="validateField('location')"
     />
-    <div class="flex justify-between">
+    <div class="flex justify-between space-x-4">
       <AppDateTimePicker
         label="Start Time"
         id="start_time"
