@@ -45,7 +45,7 @@ export const login = async (req, res) => {
     res.cookie("access-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Secure in production
-      sameSite: "none", // Required for cross-site cookies
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Required for cross-site cookies
       maxAge: keepLoggedIn ? 30 * 24 * 60 * 60 * 1000 : 120 * 60 * 1000,
     });
     res.json({
