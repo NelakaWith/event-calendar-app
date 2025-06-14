@@ -156,3 +156,21 @@ calendarOptions.value.eventClick = handleEventClick;
 // Fetch events on mount
 onMounted(fetchEvents);
 </script>
+
+<style lang="scss" scoped>
+:deep(.fc-button),
+:deep(.fc-button-primary) {
+  @apply bg-green-500 text-white rounded px-4 py-2 font-medium transition;
+  @apply hover:bg-green-600 border-none shadow-none me-1;
+}
+:deep(.fc-button:disabled),
+:deep(.fc-button-primary:disabled) {
+  @apply bg-gray-400 cursor-not-allowed;
+}
+:deep(
+    .fc .fc-button-primary:not(:disabled).fc-button-active,
+    .fc .fc-button-primary:not(:disabled):active
+  ) {
+  @apply bg-green-700 border-none shadow-none;
+}
+</style>
