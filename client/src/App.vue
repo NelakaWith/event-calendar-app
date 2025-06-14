@@ -1,7 +1,11 @@
 <template>
-  <div>
-    <AppHeader v-if="!isAuthPage" @logout="handleLogout" />
-    <router-view />
+  <div class="flex flex-col h-screen">
+    <div>
+      <AppHeader v-if="!isAuthPage" @logout="handleLogout" />
+    </div>
+    <div class="flex-1">
+      <router-view />
+    </div>
   </div>
 </template>
 
