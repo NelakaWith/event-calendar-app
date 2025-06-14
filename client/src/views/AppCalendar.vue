@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -67,4 +67,22 @@ async function handleAddEventModal(event) {
     );
   }
 }
+
+onMounted(async () => {
+  try {
+    const res = await axios.get("/api/events", { withCredentials: true });
+    calendarOptions.value.events = res.data.events.map((event) => ({
+      title: event.title,
+      start: event.start_time,
+      end: event.end_time,
+      description: event.description,
+      location: event.location,
+      id: event.id,
+    }));
+  } catch (err) {
+    alert(
+      "Failed to load events: " + (err.response?.data?.message || err.message)
+    );
+  }
+});
 </script>
