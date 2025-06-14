@@ -60,6 +60,8 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
   res.clearCookie("access-token", {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Secure in production
+    sameSite: "none", // Required for cross-site cookies
   });
   res.json({ message: "Logged out successfully" });
 };
