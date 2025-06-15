@@ -39,5 +39,12 @@ app.use("/api/events", eventRoutes);
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`[HELLO!] Server running on http://${HOST}:${PORT}`);
+  const blue = "\x1b[94m";
+  const yellow = "\x1b[93m";
+  const reset = "\x1b[0m";
+  const bold = "\x1b[1m";
+  const emoji = "🔥";
+  console.log(
+    `${blue}${bold}${emoji} [HELLO!]${reset}${yellow} Server running at: http://${HOST}:${PORT}${reset}`
+  );
 });
