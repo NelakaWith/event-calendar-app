@@ -23,7 +23,7 @@
   nav {
     @apply flex gap-6 text-base;
     .nav-link {
-      @apply text-gray-700 hover:text-green-600 transition font-semibold;
+      @apply text-gray-700 hover:text-primary-hover transition font-semibold;
     }
   }
 }
