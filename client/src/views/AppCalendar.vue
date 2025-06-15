@@ -160,8 +160,8 @@ onMounted(fetchEvents);
 <style lang="scss" scoped>
 :deep(.fc-button),
 :deep(.fc-button-primary) {
-  @apply bg-green-500 text-white rounded px-4 py-2 font-medium transition;
-  @apply hover:bg-green-600 border-none shadow-none me-1;
+  @apply bg-primary text-white rounded px-4 py-2 font-medium transition;
+  @apply hover:bg-primary-hover border-none shadow-none;
 }
 :deep(.fc-button:disabled),
 :deep(.fc-button-primary:disabled) {
@@ -171,6 +171,6 @@ onMounted(fetchEvents);
     .fc .fc-button-primary:not(:disabled).fc-button-active,
     .fc .fc-button-primary:not(:disabled):active
   ) {
-  @apply bg-green-700 border-none shadow-none;
+  @apply bg-primary-active border-none shadow-none;
 }
 </style>

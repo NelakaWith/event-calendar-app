@@ -45,7 +45,7 @@
     <div class="flex justify-end">
       <button
         type="submit"
-        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-hover"
         :disabled="!isFormValid"
       >
         {{ mode === "edit" ? "Save Changes" : "Add Event" }}
