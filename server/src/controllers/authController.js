@@ -3,6 +3,12 @@ import bcrypt from "bcrypt";
 import { User } from "../models/user.js";
 import { createTokens, validateToken } from "../middleware/jwt.middleware.js";
 
+/**
+ * Register a new user.
+ * Expects email, name, and password in the request body.
+ * Checks for existing email, hashes password, and creates user.
+ * Responds with the new user's id, email, and name.
+ */
 export const register = async (req, res) => {
   try {
     const { email, name, password } = req.body;
@@ -26,6 +32,13 @@ export const register = async (req, res) => {
   }
 };
 
+/**
+ * Log in a user.
+ * Expects email and password in the request body.
+ * Verifies credentials, generates JWT, and sets it as an HTTP-only cookie.
+ * Supports 'keepLoggedIn' for longer session duration.
+ * Responds with user id, email, and name if successful.
+ */
 export const login = async (req, res) => {
   try {
     const { email, password, keepLoggedIn } = req.body;
@@ -57,13 +70,25 @@ export const login = async (req, res) => {
   }
 };
 
+/**
+ * Log out the current user.
+ * Clears the access-token cookie.
+ * Responds with a success message.
+ */
 export const logout = (req, res) => {
   res.clearCookie("access-token", {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Secure in production
+    sameSite: "none", // Required for cross-site cookies
   });
   res.json({ message: "Logged out successfully" });
 };
 
+/**
+ * Get details of the currently authenticated user.
+ * Requires a valid JWT (validateToken middleware).
+ * Responds with user id, email, name, role, and created_at if found.
+ */
 export const getUserDetails = [
   validateToken,
   async (req, res) => {

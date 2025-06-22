@@ -94,7 +94,7 @@ const checkStrength = () => {
     passwordStrengthColor.value = "#f59e42"; // orange-400
   } else if (score === 5) {
     passwordStrength.value = "Strong";
-    passwordStrengthColor.value = "#16a34a"; // green-600
+    passwordStrengthColor.value = "#475569"; // slate-600 (primary.hover)
   } else {
     passwordStrength.value = "";
     passwordStrengthColor.value = "#888";
@@ -197,7 +197,7 @@ const onSubmit = async () => {
     }
     button {
       @apply w-full py-2 transition rounded;
-      @apply bg-green-500 text-white hover:bg-green-600;
+      @apply bg-primary text-white hover:bg-primary-hover;
       &:disabled {
         @apply bg-gray-400 cursor-not-allowed;
       }
