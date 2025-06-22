@@ -145,7 +145,7 @@ export const getEvents = async (req, res) => {
         }
       } else {
         // Non-recurring events or no range: just include the event as-is
-        allEvents.push(event);
+        allEvents.push(event.toJSON());
       }
     }
     res.json({ events: allEvents });
