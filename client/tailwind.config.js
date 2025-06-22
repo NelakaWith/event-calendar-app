@@ -1,3 +1,11 @@
+// Color variables
+const primary = "#334155"; // slate-700 (darker)
+const primaryHover = "#1e293b"; // slate-800 (darker)
+const primaryActive = "#0f172a"; // slate-900 (darkest)
+const primaryLight = "#475569"; // slate-600 (still dark)
+const secondary = "#1e40af"; // blue-800 (darker)
+const secondaryHover = "#1e3a8a"; // blue-900 (darkest)
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
@@ -5,24 +13,24 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#22c55e", // green-500
-          hover: "#16a34a", // green-600
-          active: "#15803d", // green-700
-          light: "#4ade80", // green-400
+          DEFAULT: primary,
+          hover: primaryHover,
+          active: primaryActive,
+          light: primaryLight,
         },
         secondary: {
-          DEFAULT: "#2563eb", // blue-600
-          hover: "#1d4ed8", // blue-700
+          DEFAULT: secondary,
+          hover: secondaryHover,
         },
       },
       ringColor: {
-        primary: "#22c55e",
-        "primary-hover": "#16a34a",
-        "primary-light": "#4ade80",
+        primary: primary,
+        "primary-hover": primaryHover,
+        "primary-light": primaryLight,
       },
       textColor: {
-        primary: "#22c55e",
-        "primary-hover": "#16a34a",
+        primary: primary,
+        "primary-hover": primaryHover,
       },
     },
   },
