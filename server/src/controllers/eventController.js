@@ -3,14 +3,7 @@ import { Event } from "../models/event.js";
 // Helper to expand recurring events into individual occurrences within a date range
 // event: the event object (should have start_time, end_time, recurrence_type, recurrence_until)
 // rangeStart, rangeEnd: JS Date objects defining the calendar range
-import {
-  addDays,
-  addWeeks,
-  addMonths,
-  isBefore,
-  isAfter,
-  parseISO,
-} from "date-fns";
+import { addDays, addWeeks, addMonths } from "date-fns";
 
 /**
  * Expands a recurring event into all its occurrences within a given date range.
