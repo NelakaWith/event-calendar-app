@@ -47,6 +47,7 @@
         </div>
       </AppModal>
       <FullCalendar
+        ref="calendarRef"
         :options="calendarOptions"
         style="max-width: 1000px; margin: 0 auto"
       />
@@ -77,6 +78,7 @@ const showModal = ref(false);
 const showEditModal = ref(false);
 const selectedEvent = ref(null);
 const notification = ref({ message: "", type: "error", show: false });
+const calendarRef = ref(null);
 
 // Calendar options
 const calendarOptions = ref({
@@ -144,7 +146,7 @@ async function fetchEvents(fetchInfo, successCallback, failureCallback) {
 async function handleAddEventModal(event) {
   try {
     await axios.post("/api/events", event, { withCredentials: true });
-    await fetchEvents();
+    if (calendarRef.value) calendarRef.value.getApi().refetchEvents();
     showModal.value = false;
     showNotification("Event added successfully!", "success");
   } catch (err) {
@@ -161,7 +163,7 @@ async function handleEditEventModal(editedEvent) {
     await axios.put(`/api/events/${selectedEvent.value.id}`, editedEvent, {
       withCredentials: true,
     });
-    await fetchEvents();
+    if (calendarRef.value) calendarRef.value.getApi().refetchEvents();
     showEditModal.value = false;
     selectedEvent.value = null;
     showNotification("Event updated successfully!", "success");

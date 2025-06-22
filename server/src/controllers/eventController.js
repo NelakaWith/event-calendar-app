@@ -86,6 +86,10 @@ export const createEvent = async (req, res) => {
         .json({ message: "Authentication required to create events." });
     }
     const user_id = req.user.id;
+    // Convert empty recurrence fields to null for non-recurring events
+    const safeRecurrenceType = recurrence_type === "" ? null : recurrence_type;
+    const safeRecurrenceUntil =
+      recurrence_until === "" ? null : recurrence_until;
     // Create event in database
     const event = await Event.create({
       user_id,
@@ -96,8 +100,8 @@ export const createEvent = async (req, res) => {
       location,
       timezone,
       is_recurring,
-      recurrence_type,
-      recurrence_until,
+      recurrence_type: safeRecurrenceType,
+      recurrence_until: safeRecurrenceUntil,
     });
     res.status(201).json({ message: "Event created successfully", event });
   } catch (err) {
@@ -172,6 +176,11 @@ export const updateEvent = async (req, res) => {
     const { id } = req.params;
     const event = await Event.findByPk(id);
     if (!event) return res.status(404).json({ message: "Event not found." });
+    // Convert empty recurrence fields to null for non-recurring events on update
+    if (req.body) {
+      if (req.body.recurrence_type === "") req.body.recurrence_type = null;
+      if (req.body.recurrence_until === "") req.body.recurrence_until = null;
+    }
     await event.update(req.body);
     res.json({ message: "Event updated successfully", event });
   } catch (err) {
