@@ -79,10 +79,20 @@ export const createEvent = async (req, res) => {
         .json({ message: "Authentication required to create events." });
     }
     const user_id = req.user.id;
+    // Defensive: ensure recurrence_type and recurrence_until are defined before use
+    const recurrence_type_val =
+      typeof req.body.recurrence_type !== "undefined"
+        ? req.body.recurrence_type
+        : null;
+    const recurrence_until_val =
+      typeof req.body.recurrence_until !== "undefined"
+        ? req.body.recurrence_until
+        : null;
     // Convert empty recurrence fields to null for non-recurring events
-    const safeRecurrenceType = recurrence_type === "" ? null : recurrence_type;
+    const safeRecurrenceType =
+      recurrence_type_val === "" ? null : recurrence_type_val;
     const safeRecurrenceUntil =
-      recurrence_until === "" ? null : recurrence_until;
+      recurrence_until_val === "" ? null : recurrence_until_val;
     // Create event in database
     const event = await Event.create({
       user_id,
