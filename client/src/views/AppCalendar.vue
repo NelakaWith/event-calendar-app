@@ -22,8 +22,29 @@
           :initial-description="selectedEvent.description"
           :initial-start-time="selectedEvent.start_time"
           :initial-end-time="selectedEvent.end_time"
+          :initial-is-recurring="selectedEvent.is_recurring"
+          :initial-recurrence-type="selectedEvent.recurrence_type"
+          :initial-recurrence-until="selectedEvent.recurrence_until"
           @event-added="handleEditEventModal"
         />
+        <div
+          v-if="selectedEvent && showEditModal && selectedEvent.is_recurring"
+          class="py-4 border-t mt-2 text-sm text-gray-600"
+        >
+          <div>
+            <span class="font-semibold">Recurring&MediumSpace;</span>
+            <span>
+              {{ selectedEvent.recurrence_type }} until
+              {{
+                selectedEvent.recurrence_until
+                  ? new Date(
+                      selectedEvent.recurrence_until
+                    ).toLocaleDateString()
+                  : "N/A"
+              }}
+            </span>
+          </div>
+        </div>
       </AppModal>
       <FullCalendar
         :options="calendarOptions"
@@ -41,7 +62,7 @@
 
 <script setup>
 // Imports
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -84,23 +105,38 @@ function showNotification(message, type = "error") {
   notification.value = { message, type, show: true };
 }
 
-// Fetch events from backend
-async function fetchEvents() {
+// Fetch events from backend for a given range (FullCalendar event source function)
+async function fetchEvents(fetchInfo, successCallback, failureCallback) {
   try {
-    const res = await axios.get("/api/events", { withCredentials: true });
-    calendarOptions.value.events = res.data.events.map((event) => ({
+    const params = fetchInfo
+      ? {
+          start: fetchInfo.start.toISOString(),
+          end: fetchInfo.end.toISOString(),
+        }
+      : {};
+    const res = await axios.get("/api/events", {
+      params,
+      withCredentials: true,
+    });
+    const events = res.data.events.map((event) => ({
       title: event.title,
       start: event.start_time,
       end: event.end_time,
       description: event.description,
       location: event.location,
       id: event.id,
+      is_recurring: event.is_recurring,
+      recurrence_type: event.recurrence_type,
+      recurrence_until: event.recurrence_until,
+      original_event_id: event.original_event_id || event.id,
     }));
+    successCallback(events);
   } catch (err) {
     showNotification(
       "Failed to load events: " + (err.response?.data?.message || err.message),
       "error"
     );
+    if (failureCallback) failureCallback(err);
   }
 }
 
@@ -146,6 +182,9 @@ function handleEventClick(info) {
     start_time: info.event.start,
     end_time: info.event.end,
     location: info.event.extendedProps.location,
+    is_recurring: info.event.extendedProps.is_recurring,
+    recurrence_type: info.event.extendedProps.recurrence_type,
+    recurrence_until: info.event.extendedProps.recurrence_until,
   };
   showEditModal.value = true;
 }
@@ -153,8 +192,8 @@ function handleEventClick(info) {
 // Register event click handler
 calendarOptions.value.eventClick = handleEventClick;
 
-// Fetch events on mount
-onMounted(fetchEvents);
+// Use FullCalendar's event source function for dynamic loading
+calendarOptions.value.events = fetchEvents;
 </script>
 
 <style lang="scss" scoped>

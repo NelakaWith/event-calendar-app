@@ -3,9 +3,11 @@
   input[type="text"],
   input[type="email"],
   input[type="password"],
-  textarea {
+  textarea,
+  select {
     @apply w-full px-3 py-2 border rounded-md focus:outline-none ring-1;
     @apply focus:ring-primary-hover ring-primary-light;
+    @apply bg-white text-gray-900;
   }
   label {
     @apply block mb-1;
