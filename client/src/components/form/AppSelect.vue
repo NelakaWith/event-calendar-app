@@ -28,6 +28,6 @@ const props = defineProps({
 
 <style scoped>
 .input-error {
-  border-color: theme("colors.red.500");
+  border-color: #ef4444; /* red-500 */
 }
 </style>

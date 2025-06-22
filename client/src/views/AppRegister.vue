@@ -94,7 +94,7 @@ const checkStrength = () => {
     passwordStrengthColor.value = "#f59e42"; // orange-400
   } else if (score === 5) {
     passwordStrength.value = "Strong";
-    passwordStrengthColor.value = theme("colors.primary.hover", "#16a34a"); // use Tailwind config if possible
+    passwordStrengthColor.value = "#475569"; // slate-600 (primary.hover)
   } else {
     passwordStrength.value = "";
     passwordStrengthColor.value = "#888";
