@@ -1,5 +1,19 @@
 # Event Calendar App – Monorepo
 
+<!-- prettier-ignore-start -->
+```
+
+                            _     __                    _
+                           / |_  [  |                  (_)
+ .---. _   __ .---. _ .--.`| |-'  | |--.  .--.  _ .--. __  ____  .--.  _ .--.
+/ /__\[ \ [  / /__\[ `.-. || |    | .-. / .'`\ [ `/'`\[  |[_   / .'`\ [ `.-. |
+| \__.,\ \/ /| \__.,| | | || |,   | | | | \__. || |    | | .' /| \__. || | | |
+ '.__.' \__/  '.__.[___||__\__/  [___]|__'.__.'[___]  [___[_____'.__.'[___||__]
+
+
+```
+<!-- prettier-ignore-end -->
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7e49c57e-3cc8-48c1-bb94-9ed175fe5c82/deploy-status)](https://app.netlify.com/projects/nw-event-calendar-app-client/deploys)
 
 A full-stack web app to schedule, view, and manage events via an interactive calendar interface.
