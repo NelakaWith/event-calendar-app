@@ -128,6 +128,7 @@ const schema = yup.object({
       return !value || !start_time || new Date(value) > new Date(start_time);
     }),
   location: yup.string(),
+  is_recurring: yup.boolean(),
   recurrence_type: yup.string().when("is_recurring", {
     is: true,
     then: (schema) => schema.required("Recurrence type is required."),
