@@ -24,3 +24,5 @@ jobs:
         run: npm run lint || echo "No lint script defined"
       - name: Check for syntax errors
         run: node --check index.js
+      - name: Run tests
+        run: npm test
