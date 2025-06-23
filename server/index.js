@@ -6,6 +6,8 @@ import morgan from "morgan";
 import authRoutes from "./src/routes/authRoutes.js";
 import eventRoutes from "./src/routes/eventRoutes.js";
 import dotenv from "dotenv";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
 
 dotenv.config();
 
@@ -36,6 +38,10 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 // Mount event routes
 app.use("/api/events", eventRoutes);
+
+// Load external Swagger YAML file
+const swaggerDocument = YAML.load("./openapi.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Start the server
 app.listen(PORT, () => {

@@ -1,0 +1,258 @@
+openapi: 3.0.0
+info:
+  title: Event Calendar API
+  version: 1.0.0
+  description: API documentation for the Event Calendar backend
+servers:
+  - url: http://localhost:3001
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    EventInput:
+      type: object
+      required:
+        - title
+        - start_time
+        - end_time
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        location:
+          type: string
+        timezone:
+          type: string
+        is_recurring:
+          type: boolean
+        recurrence_type:
+          type: string
+          enum: [daily, weekly, monthly]
+        recurrence_until:
+          type: string
+          format: date-time
+    EventResponse:
+      allOf:
+        - $ref: "#/components/schemas/EventInput"
+        - type: object
+          properties:
+            id:
+              type: integer
+            user_id:
+              type: integer
+    RegisterInput:
+      type: object
+      required:
+        - email
+        - name
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        password:
+          type: string
+          format: password
+    LoginInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+tags:
+  - name: Events
+    description: Event management and retrieval
+  - name: Auth
+    description: User authentication and account management
+paths:
+  /api/events:
+    post:
+      summary: Create a new event
+      tags: [Events]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventInput"
+      responses:
+        201:
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventResponse"
+        400:
+          description: Invalid input
+        401:
+          description: Authentication required
+    get:
+      summary: Get all events for the authenticated user
+      tags: [Events]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: start
+          schema:
+            type: string
+            format: date-time
+          description: Start of the calendar range (ISO string)
+        - in: query
+          name: end
+          schema:
+            type: string
+            format: date-time
+          description: End of the calendar range (ISO string)
+      responses:
+        200:
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EventResponse"
+        401:
+          description: Authentication required
+  /api/events/{id}:
+    get:
+      summary: Get a single event by ID
+      tags: [Events]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Event ID
+      responses:
+        200:
+          description: Event found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventResponse"
+        404:
+          description: Event not found
+        401:
+          description: Authentication required
+    put:
+      summary: Update an event by ID
+      tags: [Events]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Event ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventInput"
+      responses:
+        200:
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventResponse"
+        404:
+          description: Event not found
+        401:
+          description: Authentication required
+    delete:
+      summary: Delete an event by ID
+      tags: [Events]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Event ID
+      responses:
+        200:
+          description: Event deleted successfully
+        404:
+          description: Event not found
+        401:
+          description: Authentication required
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        201:
+          description: User registered successfully
+        400:
+          description: Invalid input
+  /api/auth/login:
+    post:
+      summary: Log in a user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        200:
+          description: Login successful
+        400:
+          description: Invalid credentials
+  /api/auth/logout:
+    post:
+      summary: Log out the current user
+      tags: [Auth]
+      responses:
+        200:
+          description: Logout successful
+  /api/auth/user:
+    get:
+      summary: Get details of the authenticated user
+      tags: [Auth]
+      responses:
+        200:
+          description: User details
+        401:
+          description: Not authenticated
