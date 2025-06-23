@@ -12,9 +12,28 @@ jobs:
     defaults:
       run:
         working-directory: ./server
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: event_calendar_app
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     env:
-      DB_DIALECT: sqlite
-      DB_STORAGE: ":memory:"
+      DB_DIALECT: mysql
+      DB_HOST: mysql.railway.internal
+      # DB_PORT: 3306
+      DB_NAME: railway
+      DB_USER: root
+      DB_PASS: root
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 20.x
