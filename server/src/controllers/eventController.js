@@ -14,34 +14,34 @@ import { addDays, addWeeks, addMonths } from "date-fns";
  */
 function expandRecurringEvent(event, rangeStart, rangeEnd) {
   const occurrences = [];
-  let current = new Date(event.start_time); // Start from the event's initial start_time
+  let occurrenceStart = new Date(event.start_time); // Start from the event's initial start_time
   // Use recurrence_until if set, otherwise use the requested rangeEnd
   const end = event.recurrence_until
     ? new Date(event.recurrence_until)
     : rangeEnd;
   const eventEndTime = event.end_time ? new Date(event.end_time) : null;
-  while (current <= end && current <= rangeEnd) {
+  while (occurrenceStart <= end && occurrenceStart <= rangeEnd) {
     // Only include occurrences within the requested range
-    if (current >= rangeStart) {
+    if (occurrenceStart >= rangeStart) {
       // Clone the event and set the occurrence's start/end time
       const occurrence = { ...event };
-      occurrence.start_time = current.toISOString();
+      occurrence.start_time = occurrenceStart.toISOString();
       if (eventEndTime) {
         // Maintain the original event's duration
         const duration = eventEndTime - new Date(event.start_time);
         occurrence.end_time = new Date(
-          current.getTime() + duration
+          occurrenceStart.getTime() + duration
         ).toISOString();
       }
       occurrences.push(occurrence);
     }
     // Advance to the next occurrence based on recurrence_type
     if (event.recurrence_type === "daily") {
-      current = addDays(current, 1);
+      occurrenceStart = addDays(occurrenceStart, 1);
     } else if (event.recurrence_type === "weekly") {
-      current = addWeeks(current, 1);
+      occurrenceStart = addWeeks(occurrenceStart, 1);
     } else if (event.recurrence_type === "monthly") {
-      current = addMonths(current, 1);
+      occurrenceStart = addMonths(occurrenceStart, 1);
     } else {
       // Handle unknown or unsupported recurrence type: throw error
       const errMsg = `Unknown or unsupported recurrence type: ${event.recurrence_type}`;
