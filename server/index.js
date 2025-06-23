@@ -43,14 +43,17 @@ app.use("/api/events", eventRoutes);
 const swaggerDocument = YAML.load("./openapi.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Start the server
-app.listen(PORT, () => {
-  const blue = "\x1b[94m";
-  const yellow = "\x1b[93m";
-  const reset = "\x1b[0m";
-  const bold = "\x1b[1m";
-  const emoji = "🔥";
-  console.log(
-    `${blue}${bold}${emoji} [HELLO!]${reset}${yellow} Server running at: http://${HOST}:${PORT}${reset}`
-  );
-});
+export default app;
+
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    const blue = "\x1b[94m";
+    const yellow = "\x1b[93m";
+    const reset = "\x1b[0m";
+    const bold = "\x1b[1m";
+    const emoji = "🔥";
+    console.log(
+      `${blue}${bold}${emoji} [HELLO!]${reset}${yellow} Server running at: http://${HOST}:${PORT}${reset}`
+    );
+  });
+}
