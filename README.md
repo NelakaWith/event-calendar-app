@@ -15,6 +15,9 @@
 <!-- prettier-ignore-end -->
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7e49c57e-3cc8-48c1-bb94-9ed175fe5c82/deploy-status)](https://app.netlify.com/projects/nw-event-calendar-app-client/deploys)
+[![CodeQL](https://github.com/NelakaWith/event-calendar-app/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/NelakaWith/event-calendar-app/actions/workflows/github-code-scanning/codeql)
+[![Client CI](https://github.com/NelakaWith/event-calendar-app/actions/workflows/client-ci.yml/badge.svg)](https://github.com/NelakaWith/event-calendar-app/actions/workflows/client-ci.yml)
+[![Backend CI](https://github.com/NelakaWith/event-calendar-app/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/NelakaWith/event-calendar-app/actions/workflows/backend-ci.yml)
 
 A full-stack web app to schedule, view, and manage events via an interactive calendar interface.
 
