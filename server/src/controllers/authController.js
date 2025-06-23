@@ -66,7 +66,6 @@ export const login = async (req, res) => {
       user: { id: user.id, email: user.email, name: user.name },
     });
   } catch (err) {
-    console.error("[LOGIN ERROR]", err); // Log error for CI debugging
     res.status(500).json({ message: "Login failed.", error: err.message });
   }
 };
