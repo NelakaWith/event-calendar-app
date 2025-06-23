@@ -12,6 +12,9 @@ jobs:
     defaults:
       run:
         working-directory: ./server
+    env:
+      DB_DIALECT: sqlite
+      DB_STORAGE: ":memory:"
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 20.x
