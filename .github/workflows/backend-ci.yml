@@ -12,6 +12,29 @@ jobs:
     defaults:
       run:
         working-directory: ./server
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: event_calendar_app
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    env:
+      DB_DIALECT: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_NAME: event_calendar_app
+      DB_USER: testuser
+      DB_PASS: testpass
+      JWT_SECRET: testsecret
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 20.x
@@ -20,7 +43,17 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: npm install
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            nc -z 127.0.0.1 3306 && echo Success && exit 0
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+          echo "MySQL did not start in time" && exit 1
       - name: Lint
         run: npm run lint || echo "No lint script defined"
       - name: Check for syntax errors
         run: node --check index.js
+      - name: Run tests
+        run: npm test
