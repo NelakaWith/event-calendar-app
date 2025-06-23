@@ -34,6 +34,7 @@ jobs:
       DB_NAME: event_calendar_app
       DB_USER: testuser
       DB_PASS: testpass
+      JWT_SECRET: testsecret
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 20.x
