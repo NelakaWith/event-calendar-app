@@ -29,11 +29,11 @@ jobs:
           --health-retries=5
     env:
       DB_DIALECT: mysql
-      DB_HOST: caboose.proxy.rlwy.net
-      DB_PORT: 51272
-      DB_NAME: railway
-      DB_USER: root
-      DB_PASS: root
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_NAME: event_calendar_app
+      DB_USER: testuser
+      DB_PASS: testpass
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 20.x
