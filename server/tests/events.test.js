@@ -23,7 +23,12 @@ describe("/api/events", () => {
   let cookie, eventId;
 
   beforeAll(async () => {
-    await sequelize.sync({ force: true });
+    try {
+      await sequelize.sync({ force: true });
+    } catch (err) {
+      console.error("[SEQUELIZE SYNC ERROR]", err);
+      throw err;
+    }
     ({ cookie } = await registerAndLogin());
   });
 

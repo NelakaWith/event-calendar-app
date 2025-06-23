@@ -55,6 +55,9 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y mysql-client
           mysql -h 127.0.0.1 -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON event_calendar_app.* TO 'testuser'@'%'; FLUSH PRIVILEGES;"
+      - name: Describe events table
+        run: |
+          mysql -h 127.0.0.1 -P 3306 -u testuser -ptestpass -e "DESCRIBE events;" event_calendar_app
       - name: Lint
         run: npm run lint || echo "No lint script defined"
       - name: Check for syntax errors
