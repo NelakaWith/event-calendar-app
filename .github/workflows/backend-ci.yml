@@ -29,8 +29,8 @@ jobs:
           --health-retries=5
     env:
       DB_DIALECT: mysql
-      DB_HOST: mysql.railway.internal
-      # DB_PORT: 3306
+      DB_HOST: caboose.proxy.rlwy.net:51272
+      DB_PORT: 3306
       DB_NAME: railway
       DB_USER: root
       DB_PASS: root
