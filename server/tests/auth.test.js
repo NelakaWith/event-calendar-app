@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../index";
 import sequelize from "../src/_db/sequelize.js";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 
 describe("/api/auth", () => {
   const email = `authuser_${Date.now()}@example.com`;
@@ -59,7 +60,7 @@ describe("/api/auth", () => {
   it("should not get user details after logout", async () => {
     // Do not send the cookie after logout to simulate a real browser
     const res = await request(app).get("/api/auth/user");
-    
+
     expect(res.statusCode).toBe(401);
   });
 

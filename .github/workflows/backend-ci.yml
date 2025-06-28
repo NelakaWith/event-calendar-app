@@ -60,7 +60,7 @@ jobs:
       - name: Check for syntax errors
         run: node --check index.js
       - name: Run tests
-        run: npm test
+        run: npx vitest run
       - name: Describe events table
         run: |
           mysql -h 127.0.0.1 -P 3306 -u testuser -ptestpass -e "DESCRIBE events;" event_calendar_app
