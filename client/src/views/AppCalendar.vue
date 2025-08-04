@@ -64,10 +64,12 @@
 <script setup>
 // Imports
 import { ref } from "vue";
+// FullCalendar and plugins
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+
 import AddEventForm from "../components/calendar/AddEventForm.vue";
 import AppModal from "../components/modal/AppModal.vue";
 import AppNotification from "../components/AppNotification.vue";
@@ -83,6 +85,7 @@ const calendarRef = ref(null);
 // Calendar options
 const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+  themeSystem: "bootstrap5",
   initialView: "dayGridMonth",
   headerToolbar: {
     left: "prev,next today addEventButton",
