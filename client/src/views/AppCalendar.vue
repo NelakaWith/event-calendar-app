@@ -217,4 +217,13 @@ calendarOptions.value.events = fetchEvents;
   ) {
   @apply bg-primary-active border-none shadow-none;
 }
+
+// Add border-radius to the main calendar table and fix bottom-right patch
+:deep(.fc-scrollgrid) {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+:deep(.fc-scrollgrid > tbody > tr:last-child > td:last-child) {
+  border-bottom-right-radius: 0.5rem;
+}
 </style>
