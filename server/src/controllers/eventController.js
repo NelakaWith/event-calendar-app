@@ -132,23 +132,22 @@ export const getEvents = async (req, res) => {
     let rangeEnd = end ? new Date(end) : null;
     let allEvents = [];
     for (const event of events) {
+      const e = event.toJSON();
       // If event is recurring and a range is provided, expand it into occurrences
       if (
-        event.is_recurring &&
-        event.recurrence_type &&
+        Boolean(e.is_recurring) &&
+        e.recurrence_type &&
         rangeStart &&
         rangeEnd
       ) {
         try {
-          allEvents.push(
-            ...expandRecurringEvent(event.toJSON(), rangeStart, rangeEnd)
-          );
+          allEvents.push(...expandRecurringEvent(e, rangeStart, rangeEnd));
         } catch (expandErr) {
           return res.status(400).json({ message: expandErr.message });
         }
       } else {
         // Non-recurring events or no range: just include the event as-is
-        allEvents.push(event.toJSON());
+        allEvents.push(e);
       }
     }
     res.json({ events: allEvents });
