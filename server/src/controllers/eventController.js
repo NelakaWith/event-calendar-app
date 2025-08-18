@@ -1,9 +1,5 @@
 // server/src/controllers/eventController.js
-import { Event } from "../models/event.js";
-// Helper to expand recurring events into individual occurrences within a date range
-// event: the event object (should have start_time, end_time, recurrence_type, recurrence_until)
-// rangeStart, rangeEnd: JS Date objects defining the calendar range
-import { addDays, addWeeks, addMonths } from "date-fns";
+import * as EventService from "../services/eventService.js";
 
 /**
  * Expands a recurring event into all its occurrences within a given date range.
@@ -12,44 +8,7 @@ import { addDays, addWeeks, addMonths } from "date-fns";
  * @param {Date} rangeEnd - End of the calendar range
  * @returns {Array} Array of event objects, one for each occurrence
  */
-function expandRecurringEvent(event, rangeStart, rangeEnd) {
-  const occurrences = [];
-  let occurrenceStart = new Date(event.start_time); // Start from the event's initial start_time
-  // Use recurrence_until if set, otherwise use the requested rangeEnd
-  const end = event.recurrence_until
-    ? new Date(event.recurrence_until)
-    : rangeEnd;
-  const eventEndTime = event.end_time ? new Date(event.end_time) : null;
-  while (occurrenceStart <= end && occurrenceStart <= rangeEnd) {
-    // Only include occurrences within the requested range
-    if (occurrenceStart >= rangeStart) {
-      // Clone the event and set the occurrence's start/end time
-      const occurrence = { ...event };
-      occurrence.start_time = occurrenceStart.toISOString();
-      if (eventEndTime) {
-        // Maintain the original event's duration
-        const duration = eventEndTime - new Date(event.start_time);
-        occurrence.end_time = new Date(
-          occurrenceStart.getTime() + duration
-        ).toISOString();
-      }
-      occurrences.push(occurrence);
-    }
-    // Advance to the next occurrence based on recurrence_type
-    if (event.recurrence_type === "daily") {
-      occurrenceStart = addDays(occurrenceStart, 1);
-    } else if (event.recurrence_type === "weekly") {
-      occurrenceStart = addWeeks(occurrenceStart, 1);
-    } else if (event.recurrence_type === "monthly") {
-      occurrenceStart = addMonths(occurrenceStart, 1);
-    } else {
-      // Handle unknown or unsupported recurrence type: throw error
-      const errMsg = `Unknown or unsupported recurrence type: ${event.recurrence_type}`;
-      throw new Error(errMsg);
-    }
-  }
-  return occurrences;
-}
+// recurrence expansion moved to `src/services/recurrenceService.js`
 
 // Create a new event
 export const createEvent = async (req, res) => {
@@ -93,9 +52,8 @@ export const createEvent = async (req, res) => {
       recurrence_type_val === "" ? null : recurrence_type_val;
     const safeRecurrenceUntil =
       recurrence_until_val === "" ? null : recurrence_until_val;
-    // Create event in database
-    const event = await Event.create({
-      user_id,
+    // Create event in database via service
+    const event = await EventService.createEvent(user_id, {
       title,
       description,
       start_time,
@@ -124,33 +82,15 @@ export const createEvent = async (req, res) => {
 export const getEvents = async (req, res) => {
   try {
     const user_id = req.user?.id || req.query.user_id;
-    const where = user_id ? { user_id } : {};
-    const events = await Event.findAll({ where });
-    // Parse optional range query params
     const { start, end } = req.query;
-    let rangeStart = start ? new Date(start) : null;
-    let rangeEnd = end ? new Date(end) : null;
-    let allEvents = [];
-    for (const event of events) {
-      const e = event.toJSON();
-      // If event is recurring and a range is provided, expand it into occurrences
-      if (
-        Boolean(e.is_recurring) &&
-        e.recurrence_type &&
-        rangeStart &&
-        rangeEnd
-      ) {
-        try {
-          allEvents.push(...expandRecurringEvent(e, rangeStart, rangeEnd));
-        } catch (expandErr) {
-          return res.status(400).json({ message: expandErr.message });
-        }
-      } else {
-        // Non-recurring events or no range: just include the event as-is
-        allEvents.push(e);
-      }
-    }
-    res.json({ events: allEvents });
+    const rangeStart = start ? new Date(start) : null;
+    const rangeEnd = end ? new Date(end) : null;
+    const events = await EventService.getEvents({
+      user_id,
+      rangeStart,
+      rangeEnd,
+    });
+    res.json({ events });
   } catch (err) {
     res
       .status(500)
@@ -162,7 +102,7 @@ export const getEvents = async (req, res) => {
 export const getEventById = async (req, res) => {
   try {
     const { id } = req.params;
-    const event = await Event.findByPk(id);
+    const event = await EventService.getEventById(id);
     if (!event) return res.status(404).json({ message: "Event not found." });
     res.json({ event });
   } catch (err) {
@@ -176,15 +116,15 @@ export const getEventById = async (req, res) => {
 export const updateEvent = async (req, res) => {
   try {
     const { id } = req.params;
-    const event = await Event.findByPk(id);
+    const event = await EventService.getEventById(id);
     if (!event) return res.status(404).json({ message: "Event not found." });
     // Convert empty recurrence fields to null for non-recurring events on update
     if (req.body) {
       if (req.body.recurrence_type === "") req.body.recurrence_type = null;
       if (req.body.recurrence_until === "") req.body.recurrence_until = null;
     }
-    await event.update(req.body);
-    res.json({ message: "Event updated successfully", event });
+    const updated = await EventService.updateEvent(id, req.body);
+    res.json({ message: "Event updated successfully", event: updated });
   } catch (err) {
     res
       .status(500)
@@ -196,9 +136,8 @@ export const updateEvent = async (req, res) => {
 export const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;
-    const event = await Event.findByPk(id);
-    if (!event) return res.status(404).json({ message: "Event not found." });
-    await event.destroy();
+    const ok = await EventService.deleteEvent(id);
+    if (!ok) return res.status(404).json({ message: "Event not found." });
     res.json({ message: "Event deleted successfully" });
   } catch (err) {
     res
