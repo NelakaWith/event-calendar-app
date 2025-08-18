@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRoutes from "./src/routes/authRoutes.js";
 import eventRoutes from "./src/routes/eventRoutes.js";
+import { errorHandler } from "./src/middleware/error.middleware.js";
 import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -42,6 +43,9 @@ app.use("/api/events", eventRoutes);
 // Load external Swagger YAML file
 const swaggerDocument = YAML.load("./openapi.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// Global error handler (should be last middleware)
+app.use(errorHandler);
 
 export default app;
 
