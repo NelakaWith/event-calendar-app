@@ -1,13 +1,13 @@
 // server/src/services/serviceFactory.js
 import * as eventRepository from "./eventRepository.js";
-import * as eventService from "./eventService.js";
+import { createEventService } from "./eventService.js";
 import { expandRecurringEvent } from "./recurrenceService.js";
 
-// Wire concrete implementations into the eventService module
-eventService.setRepository(eventRepository);
-eventService.setExpandRecurring(expandRecurringEvent);
-
-export const EventService = eventService;
+// Instantiate the service with concrete implementations
+export const EventService = createEventService({
+  repository: eventRepository,
+  expandRecurring: expandRecurringEvent,
+});
 
 export default {
   EventService,
