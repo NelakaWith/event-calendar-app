@@ -7,17 +7,8 @@ import {
 } from "../services/errors.js";
 
 export function errorHandler(err, req, res, next) {
-  // log full error diagnostics
-  console.error("[ERROR HANDLER] name=", err && err.name);
-  console.error(
-    "[ERROR HANDLER] instanceof NotFoundError=",
-    err instanceof NotFoundError
-  );
-  console.error(
-    "[ERROR HANDLER] instanceof ServiceError=",
-    err instanceof ServiceError
-  );
-  console.error(err && err.stack);
+  // minimal logging
+  console.error(`[ERROR] ${err && err.name}: ${err && err.message}`);
   if (err instanceof ValidationError) {
     return res.status(400).json({ message: err.message });
   }

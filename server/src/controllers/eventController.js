@@ -69,7 +69,6 @@ export const getEvents = async (req, res) => {
 export const getEventById = async (req, res) => {
   const { id } = req.params;
   const event = await EventService.getEventById(id);
-  console.log("[DEBUG] controller.getEventById found=", !!event);
   if (!event) throw new NotFoundError("Event not found.");
   res.json({ event });
 };
@@ -86,9 +85,7 @@ export const updateEvent = async (req, res) => {
 // Delete an event by its ID
 export const deleteEvent = async (req, res) => {
   const { id } = req.params;
-  console.log("[DEBUG] deleteEvent called id=", id);
   const ok = await EventService.deleteEvent(id);
-  console.log("[DEBUG] deleteEvent result=", ok);
   if (!ok) throw new NotFoundError("Event not found.");
   res.json({ message: "Event deleted successfully" });
 };

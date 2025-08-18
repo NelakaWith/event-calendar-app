@@ -47,9 +47,7 @@ export async function getEvents(options = {}) {
 }
 
 export async function getEventById(id) {
-  const evt = await repository.findById(id);
-  console.log("[DEBUG] eventService.getEventById", id, evt ? "FOUND" : "NULL");
-  return evt;
+  return repository.findById(id);
 }
 
 export async function updateEvent(id, data) {
