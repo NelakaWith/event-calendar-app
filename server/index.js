@@ -5,9 +5,12 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRoutes from "./src/routes/authRoutes.js";
 import eventRoutes from "./src/routes/eventRoutes.js";
+import { errorHandler } from "./src/middleware/error.middleware.js";
 import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
+import rateLimit from "express-rate-limit";
+import csrf from "csurf";
 
 dotenv.config();
 
@@ -29,6 +32,28 @@ app.use(cookieParser());
 // Log HTTP requests
 app.use(morgan("dev"));
 
+// Define rate limiting rules
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: "Too many requests from this IP, please try again later.",
+});
+// Apply rate limiting to all routes
+app.use(limiter);
+
+// Conditionally apply CSRF middleware
+if (process.env.NODE_ENV !== "test") {
+  const csrfProtection = csrf({ cookie: true });
+  app.use(csrfProtection);
+
+  // Example: Send CSRF token to the client
+  app.get("/api/csrf-token", (req, res) => {
+    res.json({ csrfToken: req.csrfToken() });
+  });
+}
+
 // Health check route
 app.get("/", (req, res) => {
   res.send("API is running");
@@ -42,6 +67,9 @@ app.use("/api/events", eventRoutes);
 // Load external Swagger YAML file
 const swaggerDocument = YAML.load("./openapi.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// Global error handler (should be last middleware)
+app.use(errorHandler);
 
 export default app;
 

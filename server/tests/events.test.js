@@ -3,6 +3,7 @@ import app from "../index";
 import { User } from "../src/models/user.js";
 import { Event } from "../src/models/event.js";
 import sequelize from "../src/_db/sequelize.js";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 
 // Helper to create a user and get a JWT cookie
 async function registerAndLogin() {
