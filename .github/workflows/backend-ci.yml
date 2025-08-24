@@ -86,20 +86,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - name: Set working directory
+        run: cd client
 
       - name: Install dependencies
         run: npm install
-
-      - name: Wait for MySQL to be ready
-        run: |
-          until mysqladmin ping -h 127.0.0.1 --silent; do
-            echo "Waiting for database connection..."
-            sleep 5
-          done
+        working-directory: client
 
       - name: Run tests
         env:
@@ -109,3 +101,4 @@ jobs:
           DB_PASSWORD: root
           DB_NAME: event_calendar_app
         run: npm test
+        working-directory: client
