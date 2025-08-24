@@ -10,7 +10,7 @@ describe("/api/auth", () => {
   let cookie;
 
   beforeAll(async () => {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: true }); // Recreate schema
   });
 
   it("should register a new user", async () => {
