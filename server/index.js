@@ -9,6 +9,7 @@ import { errorHandler } from "./src/middleware/error.middleware.js";
 import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
@@ -29,6 +30,17 @@ app.use(express.json());
 app.use(cookieParser());
 // Log HTTP requests
 app.use(morgan("dev"));
+
+// Define rate limiting rules
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: "Too many requests from this IP, please try again later.",
+});
+// Apply rate limiting to all routes
+app.use(limiter);
 
 // Health check route
 app.get("/", (req, res) => {
