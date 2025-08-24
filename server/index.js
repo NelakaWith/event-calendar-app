@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import rateLimit from "express-rate-limit";
+import csrf from "csurf";
 
 dotenv.config();
 
@@ -41,6 +42,17 @@ const limiter = rateLimit({
 });
 // Apply rate limiting to all routes
 app.use(limiter);
+
+// Set up CSRF protection
+const csrfProtection = csrf({ cookie: true });
+
+// Apply CSRF protection to all POST, PUT, DELETE routes
+app.use("/api", csrfProtection);
+
+// Example: Send CSRF token to the client
+app.get("/api/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 
 // Health check route
 app.get("/", (req, res) => {
