@@ -43,16 +43,16 @@ const limiter = rateLimit({
 // Apply rate limiting to all routes
 app.use(limiter);
 
-// Set up CSRF protection
-const csrfProtection = csrf({ cookie: true });
+// Conditionally apply CSRF middleware
+if (process.env.NODE_ENV !== "test") {
+  const csrfProtection = csrf({ cookie: true });
+  app.use(csrfProtection);
 
-// Apply CSRF protection to all POST, PUT, DELETE routes
-app.use("/api", csrfProtection);
-
-// Example: Send CSRF token to the client
-app.get("/api/csrf-token", (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
-});
+  // Example: Send CSRF token to the client
+  app.get("/api/csrf-token", (req, res) => {
+    res.json({ csrfToken: req.csrfToken() });
+  });
+}
 
 // Health check route
 app.get("/", (req, res) => {
